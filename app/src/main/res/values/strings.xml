@@ -29,4 +29,5 @@
             "serial" INTEGER, "name" VARCHAR,
             "dollar" VARCHAR)
     </string>
+
 </resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="sits">
+        <item>O中</item>
+        <item>O電</item>
+        <item>O大門</item>　　
+        <item>1桌</item>　　
+        <item>2桌</item>
+        <item>井邊</item>
+        <item>井電</item>　　
+        <item>井中</item>　　
+        <item>冰箱</item>
+
+    </string-array>
+    <string-array name="feature">
+        <item>男</item>
+        <item>女</item>
+        <item>情侶</item>
+        <item>夫妻</item>
+        <item>母子</item>
+        <item>父子</item>
+        <item>全家</item>
+        <item></item>
+    </string-array>
+
+</resources>
