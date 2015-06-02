@@ -1,6 +1,7 @@
 package com.food.foodpos.dao;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.food.foodpos.domain.Bill;
 import com.food.foodpos.domain.Meal;
@@ -10,8 +11,8 @@ import com.food.foodpos.domain.Meal;
  */
 public class MealDAOImpl extends AbstractDAO<Meal> {
 
-    public MealDAOImpl(Context context) {
-        super(context);
+    public MealDAOImpl(Context context, SQLiteDatabase db) {
+        super(context, db);
     }
 
     @Override

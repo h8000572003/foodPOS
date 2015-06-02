@@ -16,12 +16,12 @@ import java.util.Locale;
  * Created by 1109001 on 2015/6/2.
  */
 public abstract class AbstractDAO<T extends DomainType> {
-    private SQLiteDatabase db;
-    private DBHelp dbHelper;
 
-    public AbstractDAO(Context context) {
-        dbHelper = new DBHelp(context);
-        db = dbHelper.getWritableDatabase();
+    private SQLiteDatabase db;
+
+    public AbstractDAO(Context context, SQLiteDatabase db) {
+
+        this.db = db;
     }
 
     protected abstract String[] getAllColumns();
