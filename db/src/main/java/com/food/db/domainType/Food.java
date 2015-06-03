@@ -1,17 +1,16 @@
 package com.food.db.domainType;
 
-import com.food.foodpos.dao.AbstractDAO;
 
 /**
- * ­¹ª«
+ * é£Ÿç‰©
  * Created by 1109001 on 2015/6/2.
  */
 public class Food implements DomainType {
 
     private static final String TAG = "Food";
-    private Long id; //§Ç¸¹
-    private String name;//­¹ª«¦WºÙ
-    private String dollar;//³æ«~ª÷ÃB
+    private Long id; //åºè™Ÿ
+    private String name;//é£Ÿç‰©åç¨±
+    private String dollar;//å–®å“é‡‘é¡
 
 
 

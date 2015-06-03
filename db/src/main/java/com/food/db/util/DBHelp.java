@@ -16,6 +16,7 @@ public class DBHelp extends SQLiteOpenHelper {
 
     public DBHelp(Context context) {
         super(context, "db", null, 1);
+        this.context = context;
     }
 
     @Override
@@ -26,9 +27,17 @@ public class DBHelp extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.create_state_sql));
     }
 
+    private void insertDefault(SQLiteDatabase db) {
+
+        for (String sql : context.getResources().getStringArray(R.array.inti_sql)) {
+            db.execSQL(sql);
+        }
+
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onDropTable(db);
+
         onCreate(db);
     }
 

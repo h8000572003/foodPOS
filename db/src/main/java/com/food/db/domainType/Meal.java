@@ -1,16 +1,16 @@
 package com.food.db.domainType;
 
 /**
- * À\ÂI
+ * é¤é»
  * Created by 1109001 on 2015/6/2.
  */
 public class Meal implements DomainType {
-    private Long id; //§Ç¸¹
-    private Long billId; //³æ§Ç¸¹
-    private String name;// Åã¥Ü¦WºÙ
-    private String spcialize;//¯S§O
-    private String dolloar; //³æµ§ª÷ÃB
-    private String number;//¼Æ¶q
+    private Long id; //åºè™Ÿ
+    private Long billId; //å–®åºè™Ÿ
+    private String name;// é¡¯ç¤ºåç¨±
+    private String spcialize;//ç‰¹åˆ¥
+    private String dolloar; //å–®ç­†é‡‘é¡
+    private String number;//æ•¸é‡
 
     public Long getId() {
         return id;

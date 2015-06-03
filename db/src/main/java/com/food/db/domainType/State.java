@@ -1,18 +1,16 @@
 package com.food.db.domainType;
 
-import com.food.foodpos.dao.AbstractDAO;
 
 /**
- * °Ó«~ª¬ºA
+ * å•†å“ç‹€æ…‹
  * Created by 1109001 on 2015/6/2.
  */
 public class State implements DomainType {
 
-    private Long id;//  §Ç¸¹
-    private Long foodId;//­¹ª«§Ç¸¹
-    private Long serial;//¬y¤ô¸¹
-    private String name;//¦WºÙ
-    private String extractDollar;//ÃB¥~ª÷ÃB
+    private Long id;//  åºè™Ÿ
+    private Long foodId;//é£Ÿç‰©åºè™Ÿ
+    private String name;//åç¨±
+    private String extractDollar;//é¡å¤–é‡‘é¡
 
 
 
@@ -35,13 +33,7 @@ public class State implements DomainType {
         this.foodId = foodId;
     }
 
-    public Long getSerial() {
-        return serial;
-    }
 
-    public void setSerial(Long serial) {
-        this.serial = serial;
-    }
 
     public String getName() {
         return name;

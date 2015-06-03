@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="inti_sql">
+        <item>INSERT INTO "food" VALUES ("2","排骨意麵","65");		</item>
+        <item>INSERT INTO "food" VALUES ("3","排骨河粉","65");     </item>
+        <item>INSERT INTO "food" VALUES ("4","排骨冬粉","65");     </item>
+        <item>INSERT INTO "food" VALUES ("5","排骨泡飯","65");     </item>
+        <item>INSERT INTO "food" VALUES ("6","招牌肉粽","40");     </item>
+        <item>INSERT INTO "food" VALUES ("7","蛋黃肉粽","55");     </item>
+        <item>INSERT INTO "food" VALUES ("8","排骨酥湯","50");     </item>
+        <item>INSERT INTO "food" VALUES ("9","貢丸湯","25");       </item>
+        <item>INSERT INTO "food" VALUES ("10","蘿蔔湯","30");      </item>
+        <item>INSERT INTO "food" VALUES ("11","燙青菜","30");      </item>
+        <item>INSERT INTO "food" VALUES ("12","小菜","30");        </item>
+        <item>INSERT INTO "food" VALUES ("13","黑白切","40");      </item>
+        <item>INSERT INTO "food" VALUES ("14","滷肉飯","25");      </item>
+        <item>INSERT INTO "food" VALUES ("15","控肉飯","85");      </item>
+        <item>INSERT INTO "food" VALUES ("16","咖哩肉飯","75");    </item>
+        <item>INSERT INTO "food" VALUES ("17","筒仔米糕","30");    </item>
+        <item>INSERT INTO "food" VALUES ("18","碗粿","30");        </item>
+        <item>INSERT INTO "food" VALUES ("19","乾意麵","35");      </item>
+        <item>INSERT INTO "food" VALUES ("20","乾河粉","35");      </item>
+        <item>INSERT INTO "food" VALUES ("21","乾冬粉","35");      </item>
+        <item>INSERT INTO "food" VALUES ("22","冬瓜茶","15");      </item>
+
+    </string-array>
+
+
+</resources>

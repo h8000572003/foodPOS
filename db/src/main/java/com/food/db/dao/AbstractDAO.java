@@ -44,6 +44,25 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     protected abstract String getTableName();
 
+    public final List<T> getAll() {
+        List result = new ArrayList();
+
+        // Name of the columns we want to select
+        String[] tableColumns = this.getAllColumns();
+
+        // Query the database
+        Cursor cursor = db.query(this.getTableName(), tableColumns, "", new String[]{}, null, null, "id desc");
+        cursor.moveToFirst();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            result.add(this.getDomainConvertzr().converter(cursor));
+            cursor.moveToNext();        //將指標移至下一筆資料
+        }
+
+
+        return result;
+
+    }
 
     public final T getDataById(Long id) {
         List result = new ArrayList();
@@ -92,6 +111,7 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public final void modfiy(DomainType domainType) {
 
+        db.update(this.getTableName(), this.getDomainConvertzr().converter(domainType), "id=?", new String[]{domainType.getId() + ""});
     }
 
 }

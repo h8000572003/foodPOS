@@ -1,21 +1,21 @@
 package com.food.db.domainType;
 
 /**
- * ±b³æ
+ * å¸³å–®
  * Created by 1109001 on 2015/6/2.
  */
 public class Bill implements DomainType {
 
     private static final String TAG = "Bill";
     private Long id;//id
-    private String orderDate;//  «Ø¥ß¤é´Á
-    private String orderTime;// «Ø¥ß®É¶¡
-    private String outOrIn;//¤º¥Î©Î¥~±a
-    private String isPaid;//¤wµ²±b
-    private String isMealOut;//¤w¥Xµæ
-    private String dollar;//Á`ª÷ÃB
-    private String seat;//®y¦ì
-    private String feature;//¯S¼x
+    private String orderDate;//  å»ºç«‹æ—¥æœŸ
+    private String orderTime;// å»ºç«‹æ™‚é–“
+    private String outOrIn;//å…§ç”¨æˆ–å¤–å¸¶
+    private String isPaid;//å·²çµå¸³
+    private String isMealOut;//å·²å‡ºèœ
+    private String dollar;//ç¸½é‡‘é¡
+    private String seat;//åº§ä½
+    private String feature;//ç‰¹å¾µ
 
 
 
@@ -96,5 +96,18 @@ public class Bill implements DomainType {
         this.feature = feature;
     }
 
-
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "id=" + id +
+                ", orderDate='" + orderDate + '\'' +
+                ", orderTime='" + orderTime + '\'' +
+                ", outOrIn='" + outOrIn + '\'' +
+                ", isPaid='" + isPaid + '\'' +
+                ", isMealOut='" + isMealOut + '\'' +
+                ", dollar='" + dollar + '\'' +
+                ", seat='" + seat + '\'' +
+                ", feature='" + feature + '\'' +
+                '}';
+    }
 }

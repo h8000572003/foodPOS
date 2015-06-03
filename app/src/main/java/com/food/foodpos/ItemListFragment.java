@@ -1,14 +1,21 @@
 package com.food.foodpos;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.food.db.dao.BillDAOImpl;
 import com.food.db.domainType.Bill;
+import com.food.db.util.DBHelp;
 import com.food.foodpos.dummy.DummyContent;
+import com.food.foodpos.util.CommonUtil;
+
+import java.util.List;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -26,6 +33,7 @@ public class ItemListFragment extends ListFragment {
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final String TAG = "ItemListFragment";
 
     /**
      * The fragment's current callback object, which is notified of list item
@@ -71,7 +79,36 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bill bill=new Bill();
+        final Bill bill = new Bill();
+        bill.setDollar("500");
+        bill.setFeature("x");
+        bill.setIsMealOut("Y");
+        bill.setIsPaid("Y");
+        bill.setOrderDate("20151201");
+        bill.setOrderTime("111111");
+        bill.setOutOrIn("O");
+        bill.setSeat("1桌");
+
+        DBHelp dbHelp = new DBHelp(getActivity());
+        SQLiteDatabase sqlite = dbHelp.getWritableDatabase();
+        BillDAOImpl billDAO = new BillDAOImpl(getActivity(), sqlite);
+        try {
+            sqlite.beginTransaction();
+
+            Bill tmp = null;
+            tmp = billDAO.getDataById(3L);
+            tmp.setDollar("9999999");
+            billDAO.modfiy(tmp);
+            tmp = billDAO.getDataById(3L);
+            Log.i(TAG, "bill=" + tmp.toString());
+            sqlite.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e(TAG, "e:", e);
+        } finally {
+            sqlite.endTransaction();
+            CommonUtil.close(sqlite);
+        }
+
 
         // TODO: replace with a real list adapter.
         setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(

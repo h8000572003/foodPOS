@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.food.foodpos.domain.Bill;
+import com.food.db.domainType.Bill;
+
 
 /**
  * Created by 1109001 on 2015/6/2.

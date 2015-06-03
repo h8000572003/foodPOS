@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.food.foodpos.domain.State;
+import com.food.db.domainType.State;
+
 
 /**
  * Created by 1109001 on 2015/6/2.
@@ -28,9 +29,9 @@ public class StateDAOImpl extends AbstractDAO<State> {
                 final State meal = new State();
                 meal.setId(cursor.getLong(0));
                 meal.setFoodId(cursor.getLong(1));
-                meal.setSerial(cursor.getLong(2));
-                meal.setName(cursor.getString(3));
-                meal.setExtractDollar(cursor.getString(4));
+
+                meal.setName(cursor.getString(2));
+                meal.setExtractDollar(cursor.getString(3));
                 return meal;
             } catch (Exception e) {
                 Log.e(TAG, "Fail to create DomainType");
@@ -43,7 +44,6 @@ public class StateDAOImpl extends AbstractDAO<State> {
             final ContentValues values = new ContentValues();
             values.put("id", domainType.getId());
             values.put("foodId", domainType.getFoodId());
-            values.put("serial", domainType.getSerial());
             values.put("name", domainType.getName());
 
             values.put("extractDollar", domainType.getExtractDollar());
@@ -60,7 +60,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id", "foodId", "serial", "name", "extractDollar"};
+        return new String[]{"id", "foodId", "name", "extractDollar"};
     }
 
     @Override
