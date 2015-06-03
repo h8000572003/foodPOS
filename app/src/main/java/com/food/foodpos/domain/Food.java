@@ -18,23 +18,7 @@ public class Food implements DomainType {
     private String dollar;//³æ«~ª÷ÃB
 
 
-    public static AbstractDAO.DomainConvertzr<Food> CONVERTER = new AbstractDAO.DomainConvertzr<Food>() {
 
-        @Override
-        public Food converter(Cursor cursor) {
-            try {
-                final Food food = new Food();
-                food.setId(cursor.getLong(0));
-                food.setName(cursor.getString(1));
-                food.setDollar(cursor.getString(2));
-                return food;
-            } catch (Exception e) {
-                Log.e(TAG, "Fail to create DomainType");
-                throw new RuntimeException("create fail..", e);
-            }
-        }
-
-    };
 
     public Long getId() {
         return id;

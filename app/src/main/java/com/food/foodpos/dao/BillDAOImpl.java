@@ -3,6 +3,7 @@ package com.food.foodpos.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.food.foodpos.domain.Bill;
 
@@ -11,12 +12,38 @@ import com.food.foodpos.domain.Bill;
  */
 public class BillDAOImpl extends AbstractDAO<Bill> {
     public BillDAOImpl(Context context, SQLiteDatabase db) {
-        super(context, db);
+        super(db);
     }
+
+    public static AbstractDAO.DomainConvertzr<Bill> CONVERTER = new DomainConvertzr<Bill>() {
+
+        public static final String TAG = "AbstractDAO.DomainConvertzr<Bill>";
+
+        @Override
+        public Bill converter(Cursor cursor) {
+            try {
+                final Bill bill = new Bill();
+                bill.setId(cursor.getLong(0));
+                bill.setOrderDate(cursor.getString(1));
+                bill.setOrderTime(cursor.getString(2));
+                bill.setOutOrIn(cursor.getString(3));
+                bill.setIsPaid(cursor.getString(4));
+                bill.setIsMealOut(cursor.getString(5));
+                bill.setDollar(cursor.getString(6));
+                bill.setSeat(cursor.getString(7));
+                bill.setFeature(cursor.getString(8));
+                return bill;
+            } catch (Exception e) {
+                Log.e(TAG, "Fail to create DomainType");
+                throw new RuntimeException("create fail..", e);
+            }
+        }
+
+    };
 
     @Override
     protected DomainConvertzr getDomainConvertzr() {
-        return Bill.CONVERTER;
+        return BillDAOImpl.CONVERTER;
     }
 
 

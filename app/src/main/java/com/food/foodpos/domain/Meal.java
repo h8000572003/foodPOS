@@ -1,10 +1,6 @@
 package com.food.foodpos.domain;
 
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.util.Log;
-
-import com.food.foodpos.dao.AbstractDAO;
 
 /**
  * À\ÂI
@@ -22,28 +18,7 @@ public class Meal implements DomainType {
         return id;
     }
 
-    public static AbstractDAO.DomainConvertzr<Meal> CONVERTER = new AbstractDAO.DomainConvertzr<Meal>() {
 
-        public static final String TAG = "AbstractDAO.DomainConvertzr";
-
-        @Override
-        public Meal converter(Cursor cursor) {
-            try {
-                final Meal meal = new Meal();
-                meal.setId(cursor.getLong(0));
-                meal.setBillId(cursor.getLong(1));
-                meal.setName(cursor.getString(2));
-                meal.setSpcialize(cursor.getString(3));
-                meal.setDolloar(cursor.getString(4));
-                meal.setNumber(cursor.getString(5));
-                return meal;
-            } catch (Exception e) {
-                Log.e(TAG, "Fail to create DomainType");
-                throw new RuntimeException("create fail..", e);
-            }
-        }
-
-    };
 
     @Override
     public ContentValues converter() {

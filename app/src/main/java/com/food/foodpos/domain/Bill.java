@@ -1,14 +1,6 @@
 package com.food.foodpos.domain;
 
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.util.Log;
-
-import com.food.foodpos.dao.AbstractDAO;
-
-import java.io.Serializable;
-
-import static com.food.foodpos.dao.AbstractDAO.*;
 
 /**
  * ±b³æ
@@ -27,29 +19,7 @@ public class Bill implements DomainType {
     private String seat;//®y¦ì
     private String feature;//¯S¼x
 
-    public static AbstractDAO.DomainConvertzr<Bill> CONVERTER = new DomainConvertzr<Bill>() {
 
-        @Override
-        public Bill converter(Cursor cursor) {
-            try {
-                final Bill bill = new Bill();
-                bill.setId(cursor.getLong(0));
-                bill.setOrderDate(cursor.getString(1));
-                bill.setOrderTime(cursor.getString(2));
-                bill.setOutOrIn(cursor.getString(3));
-                bill.setIsPaid(cursor.getString(4));
-                bill.setIsMealOut(cursor.getString(5));
-                bill.setDollar(cursor.getString(6));
-                bill.setSeat(cursor.getString(7));
-                bill.setFeature(cursor.getString(8));
-                return bill;
-            } catch (Exception e) {
-                Log.e(TAG, "Fail to create DomainType");
-                throw new RuntimeException("create fail..", e);
-            }
-        }
-
-    };
 
     @Override
     public ContentValues converter() {

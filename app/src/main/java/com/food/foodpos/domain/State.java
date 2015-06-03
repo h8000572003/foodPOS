@@ -18,27 +18,7 @@ public class State implements DomainType {
     private String name;//¦WºÙ
     private String extractDollar;//ÃB¥~ª÷ÃB
 
-    public static AbstractDAO.DomainConvertzr<State> CONVERTER = new AbstractDAO.DomainConvertzr<State>() {
 
-        public static final String TAG = "AbstractDAO.DomainConvertzr";
-
-        @Override
-        public State converter(Cursor cursor) {
-            try {
-                final State meal = new State();
-                meal.setId(cursor.getLong(0));
-                meal.setFoodId(cursor.getLong(1));
-                meal.setSerial(cursor.getLong(2));
-                meal.setName(cursor.getString(3));
-                meal.setExtractDollar(cursor.getString(4));
-                return meal;
-            } catch (Exception e) {
-                Log.e(TAG, "Fail to create DomainType");
-                throw new RuntimeException("create fail..", e);
-            }
-        }
-
-    };
 
 
     public Long getId() {
