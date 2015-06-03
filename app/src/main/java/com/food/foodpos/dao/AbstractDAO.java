@@ -5,30 +5,39 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.food.foodpos.domain.DomainType;
-import com.food.foodpos.util.DBHelp;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by 1109001 on 2015/6/2.
  */
 public abstract class AbstractDAO<T extends DomainType> {
 
+
     private SQLiteDatabase db;
+
 
     public AbstractDAO(Context context, SQLiteDatabase db) {
 
         this.db = db;
     }
 
+    public interface DomainConvertzr<T extends DomainType> {
+        T converter(Cursor cursor);
+
+
+    }
+
+
+    protected abstract DomainConvertzr getDomainConvertzr();
+
     protected abstract String[] getAllColumns();
 
     protected abstract String getTableName();
 
-    public T getDataById(Long id) {
+
+    public final T getDataById(Long id) {
         List result = new ArrayList();
 
         // Name of the columns we want to select
@@ -38,7 +47,12 @@ public abstract class AbstractDAO<T extends DomainType> {
         Cursor cursor = db.query(this.getTableName(), tableColumns, "id=?", new String[]{id.toString()}, null, null, "id desc");
         cursor.moveToFirst();
 
-        // Iterate the results
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+
+            result.add(this.getDomainConvertzr().converter(cursor));
+            cursor.moveToNext();        //將指標移至下一筆資料
+        }
 
         if (result.isEmpty()) {
             return null;
@@ -48,8 +62,12 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     }
 
-    public void delete(T src) {
+    public final void delete(T src) {
         db.delete(this.getTableName(), "id=?", new String[]{src.getId().toString()});
+    }
+
+    public final void insert(T src) {
+        db.insert(this.getTableName(), null, src.converter());
     }
 
 

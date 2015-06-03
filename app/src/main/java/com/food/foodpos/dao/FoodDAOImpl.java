@@ -1,6 +1,7 @@
 package com.food.foodpos.dao;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.food.foodpos.domain.Food;
@@ -10,7 +11,12 @@ import com.food.foodpos.domain.Food;
  */
 public class FoodDAOImpl extends AbstractDAO<Food> {
     public FoodDAOImpl(Context context, SQLiteDatabase db) {
-        super(context,db);
+        super(context, db);
+    }
+
+    @Override
+    protected DomainConvertzr getDomainConvertzr() {
+        return Food.CONVERTER;
     }
 
     @Override
@@ -22,4 +28,6 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
     protected String getTableName() {
         return "Food";
     }
+
+
 }

@@ -16,6 +16,11 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
     }
 
     @Override
+    protected DomainConvertzr getDomainConvertzr() {
+        return Meal.CONVERTER;
+    }
+
+    @Override
     protected String[] getAllColumns() {
         return new String[]{"id", "bill_id", "name", "spcialize", "dolloar", "number"};
     }

@@ -1,6 +1,7 @@
 package com.food.foodpos.dao;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.food.foodpos.domain.Bill;
@@ -10,8 +11,14 @@ import com.food.foodpos.domain.Bill;
  */
 public class BillDAOImpl extends AbstractDAO<Bill> {
     public BillDAOImpl(Context context, SQLiteDatabase db) {
-        super(context,db);
+        super(context, db);
     }
+
+    @Override
+    protected DomainConvertzr getDomainConvertzr() {
+        return Bill.CONVERTER;
+    }
+
 
     @Override
     protected String[] getAllColumns() {

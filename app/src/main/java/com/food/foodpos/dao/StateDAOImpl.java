@@ -3,7 +3,6 @@ package com.food.foodpos.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.food.foodpos.domain.Meal;
 import com.food.foodpos.domain.State;
 
 /**
@@ -12,7 +11,12 @@ import com.food.foodpos.domain.State;
 public class StateDAOImpl extends AbstractDAO<State> {
 
     public StateDAOImpl(Context context, SQLiteDatabase db) {
-        super(context,db);
+        super(context, db);
+    }
+
+    @Override
+    protected DomainConvertzr getDomainConvertzr() {
+        return State.CONVERTER;
     }
 
     @Override

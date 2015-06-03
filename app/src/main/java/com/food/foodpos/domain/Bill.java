@@ -1,6 +1,14 @@
 package com.food.foodpos.domain;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.util.Log;
+
+import com.food.foodpos.dao.AbstractDAO;
+
 import java.io.Serializable;
+
+import static com.food.foodpos.dao.AbstractDAO.*;
 
 /**
  * 帳單
@@ -8,6 +16,7 @@ import java.io.Serializable;
  */
 public class Bill implements DomainType {
 
+    private static final String TAG = "Bill";
     private Long id;//id
     private String orderDate;//  建立日期
     private String orderTime;// 建立時間
@@ -18,9 +27,52 @@ public class Bill implements DomainType {
     private String seat;//座位
     private String feature;//特徵
 
+    public static AbstractDAO.DomainConvertzr<Bill> CONVERTER = new DomainConvertzr<Bill>() {
+
+        @Override
+        public Bill converter(Cursor cursor) {
+            try {
+                final Bill bill = new Bill();
+                bill.setId(cursor.getLong(0));
+                bill.setOrderDate(cursor.getString(1));
+                bill.setOrderTime(cursor.getString(2));
+                bill.setOutOrIn(cursor.getString(3));
+                bill.setIsPaid(cursor.getString(4));
+                bill.setIsMealOut(cursor.getString(5));
+                bill.setDollar(cursor.getString(6));
+                bill.setSeat(cursor.getString(7));
+                bill.setFeature(cursor.getString(8));
+                return bill;
+            } catch (Exception e) {
+                Log.e(TAG, "Fail to create DomainType");
+                throw new RuntimeException("create fail..", e);
+            }
+        }
+
+    };
+
+    @Override
+    public ContentValues converter() {
+        final ContentValues values = new ContentValues();
+        values.put("id", this.id);
+        values.put("orderDate", this.orderDate);
+        values.put("orderTime", this.orderTime);
+        values.put("outOrIn", this.outOrIn);
+        values.put("isPaid", this.isPaid);
+        values.put("isMealOut", this.isMealOut);
+        values.put("dollar", this.dollar);
+        values.put("seat", this.seat);
+        values.put("feature", this.feature);
+        return values;
+    }
+
+
+
+
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -89,4 +141,6 @@ public class Bill implements DomainType {
     public void setFeature(String feature) {
         this.feature = feature;
     }
+
+
 }
