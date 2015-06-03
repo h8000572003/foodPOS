@@ -21,20 +21,6 @@ public class Bill implements DomainType {
 
 
 
-    @Override
-    public ContentValues converter() {
-        final ContentValues values = new ContentValues();
-        values.put("id", this.id);
-        values.put("orderDate", this.orderDate);
-        values.put("orderTime", this.orderTime);
-        values.put("outOrIn", this.outOrIn);
-        values.put("isPaid", this.isPaid);
-        values.put("isMealOut", this.isMealOut);
-        values.put("dollar", this.dollar);
-        values.put("seat", this.seat);
-        values.put("feature", this.feature);
-        return values;
-    }
 
 
 

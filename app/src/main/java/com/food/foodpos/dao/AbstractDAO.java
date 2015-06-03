@@ -1,5 +1,6 @@
 package com.food.foodpos.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,6 +25,8 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public interface DomainConvertzr<T extends DomainType> {
         T converter(Cursor cursor);
+
+        ContentValues converter(T domainType);
     }
 
 
@@ -62,7 +65,7 @@ public abstract class AbstractDAO<T extends DomainType> {
     }
 
     public final void insert(T src) {
-        db.insert(this.getTableName(), null, src.converter());
+        db.insert(this.getTableName(), null, this.getDomainConvertzr().converter(src));
     }
 
 

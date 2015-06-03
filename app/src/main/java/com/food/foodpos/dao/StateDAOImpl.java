@@ -1,5 +1,6 @@
 package com.food.foodpos.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,9 +14,8 @@ import com.food.foodpos.domain.State;
 public class StateDAOImpl extends AbstractDAO<State> {
 
     public StateDAOImpl(Context context, SQLiteDatabase db) {
-        super( db);
+        super(db);
     }
-
 
 
     public static AbstractDAO.DomainConvertzr<State> CONVERTER = new AbstractDAO.DomainConvertzr<State>() {
@@ -38,7 +38,21 @@ public class StateDAOImpl extends AbstractDAO<State> {
             }
         }
 
+        @Override
+        public ContentValues converter(State domainType) {
+            final ContentValues values = new ContentValues();
+            values.put("id", domainType.getId());
+            values.put("foodId", domainType.getFoodId());
+            values.put("serial", domainType.getSerial());
+            values.put("name", domainType.getName());
+
+            values.put("extractDollar", domainType.getExtractDollar());
+
+            return values;
+        }
+
     };
+
     @Override
     protected DomainConvertzr getDomainConvertzr() {
         return StateDAOImpl.CONVERTER;
@@ -46,7 +60,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id", "food_id", "serial", "name", "extractDollar"};
+        return new String[]{"id", "foodId", "serial", "name", "extractDollar"};
     }
 
     @Override

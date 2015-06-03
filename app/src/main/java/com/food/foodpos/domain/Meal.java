@@ -20,19 +20,7 @@ public class Meal implements DomainType {
 
 
 
-    @Override
-    public ContentValues converter() {
-        final ContentValues values = new ContentValues();
-        values.put("id", this.id);
-        values.put("billId", this.billId);
-        values.put("name", this.name);
-        values.put("spcialize", this.spcialize);
-        values.put("dolloar", this.dolloar);
-        values.put("number", this.number);
 
-
-        return values;
-    }
 
     public void setId(Long id) {
         this.id = id;

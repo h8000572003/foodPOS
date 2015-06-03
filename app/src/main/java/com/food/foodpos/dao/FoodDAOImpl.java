@@ -1,5 +1,6 @@
 package com.food.foodpos.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,6 +32,16 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
                 Log.e(TAG, "Fail to create DomainType");
                 throw new RuntimeException("create fail..", e);
             }
+        }
+
+        @Override
+        public ContentValues converter(Food domainType) {
+            final ContentValues values = new ContentValues();
+            values.put("id", domainType.getId());
+            values.put("name", domainType.getName());
+            values.put("dollar", domainType.getDollar());
+
+            return values;
         }
 
     };

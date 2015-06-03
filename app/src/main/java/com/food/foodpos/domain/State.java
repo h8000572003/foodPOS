@@ -25,10 +25,7 @@ public class State implements DomainType {
         return id;
     }
 
-    @Override
-    public ContentValues converter() {
-        return null;
-    }
+
 
     public void setId(Long id) {
         this.id = id;

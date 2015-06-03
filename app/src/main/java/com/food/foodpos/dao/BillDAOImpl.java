@@ -1,5 +1,6 @@
 package com.food.foodpos.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,6 +38,21 @@ public class BillDAOImpl extends AbstractDAO<Bill> {
                 Log.e(TAG, "Fail to create DomainType");
                 throw new RuntimeException("create fail..", e);
             }
+        }
+
+        @Override
+        public ContentValues converter(Bill domainType) {
+            final ContentValues values = new ContentValues();
+            values.put("id", domainType.getId());
+            values.put("orderDate", domainType.getOrderDate());
+            values.put("orderTime", domainType.getOrderTime());
+            values.put("outOrIn", domainType.getOutOrIn());
+            values.put("isPaid", domainType.getIsPaid());
+            values.put("isMealOut", domainType.getIsMealOut());
+            values.put("dollar", domainType.getDollar());
+            values.put("seat", domainType.getSeat());
+            values.put("feature", domainType.getFeature());
+            return values;
         }
 
     };

@@ -1,5 +1,6 @@
 package com.food.foodpos.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,10 +35,22 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
             }
         }
 
+        @Override
+        public ContentValues converter(Meal domainType) {
+            final ContentValues values = new ContentValues();
+            values.put("id", domainType.getId());
+            values.put("billId", domainType.getBillId());
+            values.put("name", domainType.getName());
+            values.put("spcialize", domainType.getSpcialize());
+            values.put("dolloar", domainType.getDolloar());
+            values.put("number", domainType.getNumber());
+            return values;
+        }
+
     };
 
     public MealDAOImpl(Context context, SQLiteDatabase db) {
-        super( db);
+        super(db);
     }
 
     @Override
@@ -47,7 +60,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id", "bill_id", "name", "spcialize", "dolloar", "number"};
+        return new String[]{"id", "billId", "name", "spcialize", "dolloar", "number"};
     }
 
     @Override

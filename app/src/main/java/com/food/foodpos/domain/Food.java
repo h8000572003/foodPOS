@@ -46,17 +46,6 @@ public class Food implements DomainType {
     }
 
 
-    @Override
-    public ContentValues converter() {
-        final ContentValues values = new ContentValues();
-        values.put("id", this.id);
-        values.put("name", this.name);
-        values.put("dollar", this.dollar);
-
-        return values;
-
-
-    }
 
 
 }

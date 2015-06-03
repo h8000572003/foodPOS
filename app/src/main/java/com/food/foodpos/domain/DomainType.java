@@ -12,7 +12,7 @@ import java.io.Serializable;
 public interface DomainType extends Serializable {
     Long getId();//共有欄位 pk
 
-    ContentValues converter();//轉換成map
+
 
 
 }
