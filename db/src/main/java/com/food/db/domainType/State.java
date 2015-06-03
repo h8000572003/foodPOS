@@ -1,8 +1,4 @@
-package com.food.foodpos.domain;
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.util.Log;
+package com.food.db.domainType;
 
 import com.food.foodpos.dao.AbstractDAO;
 

@@ -1,11 +1,10 @@
-package com.food.foodpos.dao;
+package com.food.db.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.food.foodpos.domain.DomainType;
+import com.food.db.domainType.DomainType;
 
 import java.util.ArrayList;
 import java.util.List;

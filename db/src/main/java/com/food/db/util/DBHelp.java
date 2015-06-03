@@ -1,11 +1,11 @@
-package com.food.foodpos.util;
+package com.food.db.util;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.food.foodpos.R;
+import com.food.db.R;
+
 
 /**
  * Created by 1109001 on 2015/6/2.

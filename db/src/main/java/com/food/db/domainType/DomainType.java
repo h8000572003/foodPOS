@@ -1,8 +1,5 @@
-package com.food.foodpos.domain;
+package com.food.db.domainType;
 
-import android.content.ContentValues;
-
-import com.food.foodpos.dao.AbstractDAO;
 
 import java.io.Serializable;
 

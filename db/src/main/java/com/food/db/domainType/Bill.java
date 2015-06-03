@@ -1,6 +1,4 @@
-package com.food.foodpos.domain;
-
-import android.content.ContentValues;
+package com.food.db.domainType;
 
 /**
  * ±b³æ

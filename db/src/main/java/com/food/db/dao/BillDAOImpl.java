@@ -1,4 +1,4 @@
-package com.food.foodpos.dao;
+package com.food.db.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
