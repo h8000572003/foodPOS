@@ -10,9 +10,9 @@ import java.io.Serializable;
  * Created by 1109001 on 2015/6/2.
  */
 public interface DomainType extends Serializable {
-    Long getId();
+    Long getId();//共有欄位 pk
 
-    ContentValues converter();
+    ContentValues converter();//轉換成map
 
 
 }

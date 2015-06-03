@@ -18,15 +18,12 @@ public abstract class AbstractDAO<T extends DomainType> {
     private SQLiteDatabase db;
 
 
-    public AbstractDAO(Context context, SQLiteDatabase db) {
-
+    public AbstractDAO(SQLiteDatabase db) {
         this.db = db;
     }
 
     public interface DomainConvertzr<T extends DomainType> {
         T converter(Cursor cursor);
-
-
     }
 
 
@@ -47,11 +44,9 @@ public abstract class AbstractDAO<T extends DomainType> {
         Cursor cursor = db.query(this.getTableName(), tableColumns, "id=?", new String[]{id.toString()}, null, null, "id desc");
         cursor.moveToFirst();
 
-
         for (int i = 0; i < cursor.getCount(); i++) {
-
             result.add(this.getDomainConvertzr().converter(cursor));
-            cursor.moveToNext();        //±N«ü¼Ð²¾¦Ü¤U¤@µ§¸ê®Æ
+            cursor.moveToNext();        //å°‡æŒ‡æ¨™ç§»è‡³ä¸‹ä¸€ç­†è³‡æ–™
         }
 
         if (result.isEmpty()) {
