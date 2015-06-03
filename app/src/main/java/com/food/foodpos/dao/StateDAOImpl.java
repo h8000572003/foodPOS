@@ -18,7 +18,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
     }
 
 
-    public static AbstractDAO.DomainConvertzr<State> CONVERTER = new AbstractDAO.DomainConvertzr<State>() {
+    public static AbstractDAO.DomainConverter<State> CONVERTER = new AbstractDAO.DomainConverter<State>() {
 
         public static final String TAG = "AbstractDAO.DomainConvertzr";
 
@@ -54,7 +54,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
     };
 
     @Override
-    protected DomainConvertzr getDomainConvertzr() {
+    protected DomainConverter getDomainConvertzr() {
         return StateDAOImpl.CONVERTER;
     }
 

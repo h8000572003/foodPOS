@@ -14,23 +14,32 @@ import java.util.List;
  * Created by 1109001 on 2015/6/2.
  */
 public abstract class AbstractDAO<T extends DomainType> {
-
-
     private SQLiteDatabase db;
-
 
     public AbstractDAO(SQLiteDatabase db) {
         this.db = db;
     }
 
-    public interface DomainConvertzr<T extends DomainType> {
+    public interface DomainConverter<T extends DomainType> {
+        /**
+         * 轉換成domain
+         *
+         * @param cursor
+         * @return
+         */
         T converter(Cursor cursor);
 
+        /**
+         * 主換成map
+         *
+         * @param domainType
+         * @return
+         */
         ContentValues converter(T domainType);
     }
 
 
-    protected abstract DomainConvertzr getDomainConvertzr();
+    protected abstract DomainConverter getDomainConvertzr();
 
     protected abstract String[] getAllColumns();
 
@@ -61,12 +70,29 @@ public abstract class AbstractDAO<T extends DomainType> {
     }
 
     public final void delete(T src) {
+
         db.delete(this.getTableName(), "id=?", new String[]{src.getId().toString()});
     }
 
     public final void insert(T src) {
-        db.insert(this.getTableName(), null, this.getDomainConvertzr().converter(src));
+
+        if (db.insert(this.getTableName(), null, this.getDomainConvertzr().converter(src)) == -1) {
+            throw new RuntimeException("insert error..");
+        }
+
     }
 
+    public final void modfiyByColumn(List<String> columns, List<String> values, Long id) {
+        ContentValues value = new ContentValues();
+        for (int i = 0; i < columns.size(); i++) {
+
+            value.put(columns.get(i), values.get(i));
+        }
+        db.update(this.getTableName(), value, "id=?", new String[]{id.toString()});
+    }
+
+    public final void modfiy(DomainType domainType) {
+
+    }
 
 }

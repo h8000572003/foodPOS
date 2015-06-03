@@ -16,7 +16,7 @@ public class BillDAOImpl extends AbstractDAO<Bill> {
         super(db);
     }
 
-    public static AbstractDAO.DomainConvertzr<Bill> CONVERTER = new DomainConvertzr<Bill>() {
+    public static AbstractDAO.DomainConverter<Bill> CONVERTER = new DomainConverter<Bill>() {
 
         public static final String TAG = "AbstractDAO.DomainConvertzr<Bill>";
 
@@ -58,7 +58,7 @@ public class BillDAOImpl extends AbstractDAO<Bill> {
     };
 
     @Override
-    protected DomainConvertzr getDomainConvertzr() {
+    protected DomainConverter getDomainConvertzr() {
         return BillDAOImpl.CONVERTER;
     }
 

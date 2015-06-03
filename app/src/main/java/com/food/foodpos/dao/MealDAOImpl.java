@@ -14,7 +14,7 @@ import com.food.foodpos.domain.Meal;
  */
 public class MealDAOImpl extends AbstractDAO<Meal> {
 
-    public static AbstractDAO.DomainConvertzr<Meal> CONVERTER = new AbstractDAO.DomainConvertzr<Meal>() {
+    public static AbstractDAO.DomainConverter<Meal> CONVERTER = new AbstractDAO.DomainConverter<Meal>() {
 
         public static final String TAG = "AbstractDAO.DomainConvertzr";
 
@@ -30,7 +30,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
                 meal.setNumber(cursor.getString(5));
                 return meal;
             } catch (Exception e) {
-                Log.e(TAG, "Fail to create DomainType");
+                Log.e(TAG, "Fail to create DomainType",e);
                 throw new RuntimeException("create fail..", e);
             }
         }
@@ -54,7 +54,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
     }
 
     @Override
-    protected DomainConvertzr getDomainConvertzr() {
+    protected DomainConverter getDomainConvertzr() {
         return MealDAOImpl.CONVERTER;
     }
 

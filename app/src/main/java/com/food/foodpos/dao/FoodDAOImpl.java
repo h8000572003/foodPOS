@@ -16,7 +16,7 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
         super(db);
     }
 
-    public static AbstractDAO.DomainConvertzr<Food> CONVERTER = new AbstractDAO.DomainConvertzr<Food>() {
+    public static AbstractDAO.DomainConverter<Food> CONVERTER = new AbstractDAO.DomainConverter<Food>() {
 
         public static final String TAG = "AbstractDAO.DomainConvertzr<Food>";
 
@@ -47,7 +47,7 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
     };
 
     @Override
-    protected DomainConvertzr getDomainConvertzr() {
+    protected DomainConverter getDomainConvertzr() {
         return FoodDAOImpl.CONVERTER;
     }
 
