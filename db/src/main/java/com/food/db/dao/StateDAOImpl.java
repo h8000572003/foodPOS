@@ -28,10 +28,8 @@ public class StateDAOImpl extends AbstractDAO<State> {
             try {
                 final State meal = new State();
                 meal.setId(cursor.getLong(0));
-                meal.setFoodId(cursor.getLong(1));
-
-                meal.setName(cursor.getString(2));
-                meal.setExtractDollar(cursor.getString(3));
+                meal.setName(cursor.getString(1));
+                meal.setExtractDollar(cursor.getString(2));
                 return meal;
             } catch (Exception e) {
                 Log.e(TAG, "Fail to create DomainType");
@@ -43,9 +41,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
         public ContentValues converter(State domainType) {
             final ContentValues values = new ContentValues();
             values.put("id", domainType.getId());
-            values.put("foodId", domainType.getFoodId());
             values.put("name", domainType.getName());
-
             values.put("extractDollar", domainType.getExtractDollar());
 
             return values;
@@ -60,7 +56,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id", "foodId", "name", "extractDollar"};
+        return new String[]{"id",  "name", "extractDollar"};
     }
 
     @Override

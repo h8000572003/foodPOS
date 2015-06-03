@@ -8,7 +8,7 @@ package com.food.db.domainType;
 public class State implements DomainType {
 
     private Long id;//  序號
-    private Long foodId;//食物序號
+
     private String name;//名稱
     private String extractDollar;//額外金額
 
@@ -25,13 +25,7 @@ public class State implements DomainType {
         this.id = id;
     }
 
-    public Long getFoodId() {
-        return foodId;
-    }
 
-    public void setFoodId(Long foodId) {
-        this.foodId = foodId;
-    }
 
 
 

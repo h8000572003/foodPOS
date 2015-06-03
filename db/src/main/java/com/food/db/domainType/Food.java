@@ -7,13 +7,19 @@ package com.food.db.domainType;
  */
 public class Food implements DomainType {
 
-    private static final String TAG = "Food";
+
     private Long id; //序號
+    private Long stateId;
     private String name;//食物名稱
     private String dollar;//單品金額
 
+    public Long getStateId() {
+        return stateId;
+    }
 
-
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
+    }
 
     public Long getId() {
         return id;
@@ -39,8 +45,6 @@ public class Food implements DomainType {
     public void setDollar(String dollar) {
         this.dollar = dollar;
     }
-
-
 
 
 }

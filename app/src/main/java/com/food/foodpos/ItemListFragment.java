@@ -10,7 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.food.db.dao.BillDAOImpl;
+import com.food.db.dao.FoodDAOImpl;
 import com.food.db.domainType.Bill;
+import com.food.db.domainType.Food;
 import com.food.db.util.DBHelp;
 import com.food.foodpos.dummy.DummyContent;
 import com.food.foodpos.util.CommonUtil;
@@ -79,43 +81,22 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Bill bill = new Bill();
-        bill.setDollar("500");
-        bill.setFeature("x");
-        bill.setIsMealOut("Y");
-        bill.setIsPaid("Y");
-        bill.setOrderDate("20151201");
-        bill.setOrderTime("111111");
-        bill.setOutOrIn("O");
-        bill.setSeat("1桌");
+
+
 
         DBHelp dbHelp = new DBHelp(getActivity());
         SQLiteDatabase sqlite = dbHelp.getWritableDatabase();
-        BillDAOImpl billDAO = new BillDAOImpl(getActivity(), sqlite);
-        try {
-            sqlite.beginTransaction();
-
-            Bill tmp = null;
-            tmp = billDAO.getDataById(3L);
-            tmp.setDollar("9999999");
-            billDAO.modfiy(tmp);
-            tmp = billDAO.getDataById(3L);
-            Log.i(TAG, "bill=" + tmp.toString());
-            sqlite.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e(TAG, "e:", e);
-        } finally {
-            sqlite.endTransaction();
-            CommonUtil.close(sqlite);
-        }
+        FoodDAOImpl dao = new FoodDAOImpl(sqlite);
 
 
         // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
+        setListAdapter(new ArrayAdapter<Food>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                DummyContent.ITEMS));
+                dao.getAll()));
+
+        CommonUtil.close(sqlite);
     }
 
     @Override

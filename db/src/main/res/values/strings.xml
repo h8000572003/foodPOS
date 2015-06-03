@@ -2,29 +2,17 @@
     <string name="app_name">db</string>
 
 
-      <string name="create_bill_sql">CREATE TABLE "Bill("
-        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
-        "orderDate" CHAR, "orderTime" CHAR, "outOrIn" CHAR,
-        "isPaid" CHAR, "isMealOut" CHAR, "dollar" VARCHAR,
-        "seat" VARCHAR, "feature" VARCHAR);</string>
+      <string name="create_bill_sql">CREATE TABLE "Bill(""id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"orderDate" CHAR, "orderTime" CHAR, "outOrIn" CHAR,"isPaid" CHAR, "isMealOut" CHAR, "dollar" VARCHAR,"seat" VARCHAR, "feature" VARCHAR);</string>
 
     <string name="create_meal_sql">
-        CREATE TABLE "Meal" (
-        "id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
-        "billId" INTEGER NOT NULL , "name" VARCHAR NOT NULL ,
-        "spcailize" VARCHAR,
-        "dollar" VARCHAR DEFAULT 0,
-        "number" VARCHAR DEFAULT 0);
+        CREATE TABLE "Meal" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"billId" INTEGER NOT NULL , "name" VARCHAR NOT NULL ,"spcailize" VARCHAR,"dollar" VARCHAR DEFAULT 0,"number" VARCHAR DEFAULT 0);
     </string>
 
     <string name="create_food_sql">
-        CREATE TABLE "Food" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR, "dollar" VARCHAR);
+       CREATE TABLE "food" ("id" INTEGER PRIMARY KEY  NOT NULL , "stateId" VARCHAR,"name" VARCHAR,"dollar" VARCHAR)
     </string>
 
     <string name="create_state_sql">
-            CREATE TABLE "State"
-            ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
-                "foodId" INTEGER NOT NULL , "name" VARCHAR,
-                "dollar" VARCHAR);
+            CREATE TABLE "State"("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"name" VARCHAR,"dollar" VARCHAR);
     </string>
 </resources>

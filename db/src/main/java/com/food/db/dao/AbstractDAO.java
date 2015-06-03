@@ -58,7 +58,8 @@ public abstract class AbstractDAO<T extends DomainType> {
             result.add(this.getDomainConvertzr().converter(cursor));
             cursor.moveToNext();        //將指標移至下一筆資料
         }
-
+        cursor
+                .close();
 
         return result;
 
@@ -82,7 +83,8 @@ public abstract class AbstractDAO<T extends DomainType> {
         if (result.isEmpty()) {
             return null;
         }
-
+        cursor
+                .close();
         return (T) result.get(0);
 
     }
