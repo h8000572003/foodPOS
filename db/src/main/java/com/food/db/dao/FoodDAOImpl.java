@@ -26,9 +26,9 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
             try {
                 final Food food = new Food();
                 food.setId(cursor.getLong(0));
-                food.setStateId(cursor.getLong(1));
-                food.setName(cursor.getString(2));
-                food.setDollar(cursor.getString(3));
+
+                food.setName(cursor.getString(1));
+                food.setDollar(cursor.getString(2));
                 return food;
             } catch (Exception e) {
                 Log.e(TAG, "Fail to create DomainType");
@@ -40,7 +40,7 @@ public class FoodDAOImpl extends AbstractDAO<Food> {
         public ContentValues converter(Food domainType) {
             final ContentValues values = new ContentValues();
             values.put("id", domainType.getId());
-            values.put("stateId", domainType.getStateId());
+
             values.put("name", domainType.getName());
             values.put("dollar", domainType.getDollar());
 
