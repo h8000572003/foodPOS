@@ -13,7 +13,7 @@ public class Bill implements DomainType {
     @Column(name = "建立日期", isPk = false, column = "orderDate", isNum = false)
     private String orderDate;//  建立日期
 
-    @Column(name = "建立日期", isPk = false, column = "orderDate", isNum = false)
+    @Column(name = "建立日期", isPk = false, column = "orderTime", isNum = false)
     private String orderTime;// 建立時間
 
     @Column(name = "內用或外帶", isPk = false, column = "outOrIn", isNum = false)

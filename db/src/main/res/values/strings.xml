@@ -15,4 +15,7 @@
     <string name="create_state_sql">
             CREATE TABLE "State"("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"name" VARCHAR,"dollar" VARCHAR);
     </string>
+
+
+
 </resources>

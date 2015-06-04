@@ -9,14 +9,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.food.ae.util.AeUtils;
 import com.food.db.dao.BillDAOImpl;
 import com.food.db.dao.FoodDAOImpl;
 import com.food.db.domainType.Bill;
 import com.food.db.domainType.Food;
+import com.food.db.util.DBFactory;
 import com.food.db.util.DBHelp;
+import com.food.db.util.DBMain;
 import com.food.foodpos.dummy.DummyContent;
 import com.food.foodpos.util.CommonUtil;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -82,21 +88,39 @@ public class ItemListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
 
+        DBMain dbMain =
+                DBFactory.getLocationDB(this.getActivity());
+
+        try {
+            dbMain.beginTransaction();
+
+            Bill bill = new Bill();
+            bill.setDollar("1000");
+            bill.setSeat("一桌");
+            bill.setOutOrIn("O");
+            bill.setOrderDate(AeUtils.getNowDate());
+            bill.setOrderTime(AeUtils.getNowTime());
+            bill.setFeature("2人");
+            bill.setIsMealOut("N");
+            bill.setIsPaid("N");
+            dbMain.insert(bill);
+            List<Bill> bills = dbMain.query(Bill.class, "select * from bill ", new String[]{});
 
 
-        DBHelp dbHelp = new DBHelp(getActivity());
-        SQLiteDatabase sqlite = dbHelp.getWritableDatabase();
-        FoodDAOImpl dao = new FoodDAOImpl(sqlite);
+            Log.i(TAG, "bills=" + bills.toString());
+            dbMain.setTransactionSuccessful();
+
+            setListAdapter(new ArrayAdapter<Bill>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_activated_1,
+                    android.R.id.text1,
+                    bills));
+        } finally {
+            dbMain.endTransaction();
+            dbMain.close();
+        }
 
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<Food>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                dao.getAll()));
-
-        CommonUtil.close(sqlite);
     }
 
     @Override
