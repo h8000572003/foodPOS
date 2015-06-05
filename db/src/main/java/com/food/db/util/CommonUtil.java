@@ -41,14 +41,10 @@ public class CommonUtil {
     public static <T extends DomainType> List<T> getValueByDomain(Cursor cursor, Class<T> pClass) {
         List<T> result = new ArrayList<T>();
         try {
-
-            Field[] fs =
-                    pClass.getDeclaredFields();
-
+            final Field[] fs = pClass.getDeclaredFields();
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getCount(); i++) {
-
-                T newObject = pClass.newInstance();
+                final T newObject = pClass.newInstance();
                 for (int j = 0; j < fs.length; j++) {
                     if (fs[j].isAnnotationPresent(Column.class)) {
                         final Column column = fs[j].getAnnotation(Column.class);

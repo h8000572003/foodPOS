@@ -2,6 +2,7 @@ package com.food.foodpos;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.food.db.util.DBHelp;
 import com.food.db.util.DBMain;
 import com.food.foodpos.dummy.DummyContent;
 import com.food.foodpos.util.CommonUtil;
+import com.parse.ParseException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,42 +92,27 @@ public class ItemListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
 
-        DBMain dbMain =
-                DBFactory.getLocationDB(this.getActivity());
-
-        try {
-            dbMain.beginTransaction();
-
-            Bill bill = new Bill();
-            bill.setDollar("1000");
-            bill.setSeat("一桌");
-            bill.setOutOrIn("O");
-            bill.setOrderDate(AeUtils.getNowDate());
-            bill.setOrderTime(AeUtils.getNowTime());
-            bill.setFeature("2人");
-            bill.setIsMealOut("N");
-            bill.setIsPaid("N");
-            dbMain.insert(bill);
-            List<Bill> bills = dbMain.query(Bill.class, "select * from bill ", new String[]{});
-
-
-            Log.i(TAG, "bills=" + bills.toString());
-            dbMain.setTransactionSuccessful();
-
-            setListAdapter(new ArrayAdapter<Bill>(
-                    getActivity(),
-                    android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text1,
-                    bills));
-        } finally {
-            dbMain.endTransaction();
-            dbMain.close();
-        }
 
 
     }
-    protected class BillAdpter extends BaseAdapter{
 
+    private class LoadData extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            DBMain dbMain =
+                    DBFactory.getColudeDB(getActivity());
+            List<Food> foods = null;
+
+            foods = dbMain.query(Food.class, "", new String[]{});
+
+            Log.i(TAG, "foods=" + foods.toString());
+            return null;
+        }
+    }
+
+    protected class BillAdpter extends BaseAdapter {
 
 
         @Override

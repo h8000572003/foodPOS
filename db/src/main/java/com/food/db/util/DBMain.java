@@ -1,6 +1,7 @@
 package com.food.db.util;
 
 import com.food.db.domainType.DomainType;
+import com.parse.ParseException;
 
 import java.io.Closeable;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface DBMain {
 
     void modfiy(List<DomainType> types);
 
-    <T extends DomainType> List<T> query(Class<T> pClass, String sql, String[] selectionArgs);
+    <T extends DomainType> List<T> query(Class<T> pClass, String sql, String[] selectionArgs) ;
 
     /**
      * 開始交易控管
@@ -34,4 +35,6 @@ public interface DBMain {
     void endTransaction();
 
     void close();
+
+
 }

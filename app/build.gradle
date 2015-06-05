@@ -6,8 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.food.foodpos"
-        minSdkVersion 15
-        targetSdkVersion 22
+        minSdkVersion 15-+2
         versionCode 1
         versionName "1.0"
     }
