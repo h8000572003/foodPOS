@@ -77,24 +77,9 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new LoadData().execute();
-
 
     }
 
-    private class LoadData extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-
-            JDBCDBMain dbmain = DBFactory.getDB(getActivity());
-            dbmain.query();
-
-            Log.i(TAG, "foods=" + foods.toString());
-            return null;
-        }
-    }
 
     protected class BillAdpter extends BaseAdapter {
 
