@@ -7,8 +7,11 @@ package com.food.db.domainType;
 public class Bill implements DomainType {
 
 
-    @Column(name = "id", isPk = false, column = "id", isNum = true)
+    @Column(name = "id", isPk = true, column = "id", isNum = true)
     private Long id;//
+
+    @Column(name = "txId", isPk = false, column = "txId", isNum = false)
+    private String txId;
 
     @Column(name = "建立日期", isPk = false, column = "orderDate", isNum = false)
     private String orderDate;//  建立日期
@@ -106,6 +109,15 @@ public class Bill implements DomainType {
 
     public void setFeature(String feature) {
         this.feature = feature;
+    }
+
+
+    public String getTxId() {
+        return txId;
+    }
+
+    public void setTxId(String txId) {
+        this.txId = txId;
     }
 
     @Override

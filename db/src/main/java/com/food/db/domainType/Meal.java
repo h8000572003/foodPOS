@@ -10,8 +10,8 @@ public class Meal implements DomainType {
     @Column(name = "id", isPk = false, column = "id", isNum = true)
     private Long id; //序號
 
-    @Column(name = "單序號", isPk = false, column = "billId; //", isNum = true)
-    private Long billId; //單序號
+    @Column(name = "txId", isPk = false, column = "txId", isNum = false)
+    private String txId;
 
     @Column(name = "顯示名稱", isPk = false, column = "name", isNum = false)
     private String name;// 顯示名稱
@@ -34,12 +34,12 @@ public class Meal implements DomainType {
         this.id = id;
     }
 
-    public Long getBillId() {
-        return billId;
+    public String getTxId() {
+        return txId;
     }
 
-    public void setBillId(Long billId) {
-        this.billId = billId;
+    public void setTxId(String txId) {
+        this.txId = txId;
     }
 
     public String getName() {

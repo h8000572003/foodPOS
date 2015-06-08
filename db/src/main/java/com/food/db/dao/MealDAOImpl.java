@@ -23,7 +23,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
             try {
                 final Meal meal = new Meal();
                 meal.setId(cursor.getLong(0));
-                meal.setBillId(cursor.getLong(1));
+               // meal.setBillId(cursor.getLong(1));
                 meal.setName(cursor.getString(2));
                 meal.setSpcialize(cursor.getString(3));
                 meal.setDolloar(cursor.getString(4));
@@ -39,7 +39,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
         public ContentValues converter(Meal domainType) {
             final ContentValues values = new ContentValues();
             values.put("id", domainType.getId());
-            values.put("billId", domainType.getBillId());
+          //  values.put("billId", domainType.getBillId());
             values.put("name", domainType.getName());
             values.put("spcialize", domainType.getSpcialize());
             values.put("dolloar", domainType.getDolloar());
