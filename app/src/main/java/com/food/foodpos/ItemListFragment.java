@@ -1,33 +1,18 @@
 package com.food.foodpos;
 
 import android.app.Activity;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.food.ae.util.AeUtils;
-import com.food.db.dao.BillDAOImpl;
-import com.food.db.dao.FoodDAOImpl;
-import com.food.db.domainType.Bill;
-import com.food.db.domainType.Food;
 import com.food.db.util.DBFactory;
-import com.food.db.util.DBHelp;
-import com.food.db.util.DBMain;
+import com.food.db.util.JDBCDBMain;
 import com.food.foodpos.dummy.DummyContent;
-import com.food.foodpos.util.CommonUtil;
-import com.parse.ParseException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -88,10 +73,11 @@ public class ItemListFragment extends ListFragment {
     }
 
     @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        new LoadData().execute();
 
 
     }
@@ -101,11 +87,9 @@ public class ItemListFragment extends ListFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            DBMain dbMain =
-                    DBFactory.getColudeDB(getActivity());
-            List<Food> foods = null;
 
-            foods = dbMain.query(Food.class, "", new String[]{});
+            JDBCDBMain dbmain = DBFactory.getDB(getActivity());
+            dbmain.query();
 
             Log.i(TAG, "foods=" + foods.toString());
             return null;
