@@ -1,6 +1,5 @@
 package com.food.foodpos.backend;
 
-import com.example.DTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
