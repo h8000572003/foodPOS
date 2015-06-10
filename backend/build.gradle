@@ -31,7 +31,6 @@ dependencies {
     compile 'com.googlecode.objectify:objectify:4.0b3'
     compile 'com.ganyo:gcm-server:1.0.2'
 
-    compile 'com.google.code.gson:gson:2.3.1'
     compile project(':lib')
 }
 
