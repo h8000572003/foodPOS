@@ -1,17 +1,13 @@
 package com.food.foodpos;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.food.db.util.DBFactory;
-import com.food.db.util.JDBCDBMain;
 import com.food.foodpos.dummy.DummyContent;
 
 /**
@@ -175,4 +171,6 @@ public class ItemListFragment extends ListFragment {
 
         mActivatedPosition = position;
     }
+
+
 }

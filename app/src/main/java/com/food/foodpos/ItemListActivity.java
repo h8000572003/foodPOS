@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.food.foodpos.util.GcmRegistrationAsyncTask;
+
 
 /**
  * An activity representing a list of Items. This activity
@@ -48,6 +50,8 @@ public class ItemListActivity extends FragmentActivity
                     .findFragmentById(R.id.item_list))
                     .setActivateOnItemClick(true);
         }
+        new GcmRegistrationAsyncTask(this).execute();
+
 
         // TODO: If exposing deep links into your app, handle intents here.
     }

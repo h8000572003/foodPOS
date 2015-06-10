@@ -1,4 +1,4 @@
-package com.food.ae.util;
+package com.food.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +12,7 @@ public class AeUtils {
     }
 
     public static String getNowDate() {
+
         return new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 
