@@ -64,7 +64,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             // is using accounts.
             regService.register(regId).execute();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             msg = "Error: " + ex.getMessage();
         }
