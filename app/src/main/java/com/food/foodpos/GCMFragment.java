@@ -68,13 +68,7 @@ public class GCMFragment extends Fragment {
                 new MyPost().execute();
             }
         });
-//        this.broadcastBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().
-//                        sendBroadcast(new Intent("com.google.android.c2dm.intent.RECEIVE"));
-//            }
-//        });
+
 
         return rootView;
     }
