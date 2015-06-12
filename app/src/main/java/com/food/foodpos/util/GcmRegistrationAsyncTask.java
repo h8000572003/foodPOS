@@ -1,21 +1,22 @@
 package com.food.foodpos.util;
 
 import android.content.Context;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.food.foodpos.backend.registration.Registration;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
-import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
-import org.json.JSONObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
@@ -47,7 +48,22 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             }
             String regId = gcm.register(SENDER_ID);
             msg = "Device registered, registration ID=" + regId;
-            this.doTranslate(regId);
+
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet("http://192.168.137.100:8080/SpringMVCV1/rest/gcm/insert?id=" + regId);
+
+            HttpResponse response;
+            try {
+                response = client.execute(request);
+
+                Log.d("Response of GET request", response.toString());
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -56,33 +72,6 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         return msg;
     }
 
-    private void doTranslate(String id) {
-        HttpURLConnection conn = null;
-        try {
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
-
-
-            // 建立連線
-            URL url = new URL(
-                    "http://192.168.1.59:8080/SpringMVCV1/rest/gcm/insert?id="
-                            + id);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("GET");
-            conn.connect();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            ;
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-    }
 
     @Override
     protected void onPostExecute(String msg) {
