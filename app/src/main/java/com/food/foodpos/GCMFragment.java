@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.food.foodpos.util.gcm.Contract;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.apache.http.HttpResponse;
@@ -93,7 +94,7 @@ public class GCMFragment extends Fragment {
 
 
             HttpClient client = new DefaultHttpClient();
-            HttpGet request = new HttpGet("http://192.168.137.100:8080/SpringMVCV1/rest/gcm/send");
+            HttpGet request = new HttpGet(Contract.REST_ROOT_URL+"/gcm/send");
 
             HttpResponse response;
             try {
