@@ -9,55 +9,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
 
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="[外/內][001][井邊]夫妻 [$500]"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <LinearLayout
-            android:background="@color/background_material_dark"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buyBillBtn"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-
-            <Button
-                android:id="@+id/buyBillBtn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="尚未結帳" />
-
-            <Button
-                android:id="@+id/orderBtn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="點餐" />
-
-            <Button
-                android:id="@+id/toFoodBtn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="上菜" />
-
-        </LinearLayout>
+            android:text="尚未結帳" />
 
 
     </LinearLayout>
 
-
-    <ListView
-        android:id="@+id/listView"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="1dp"
+        android:background="@color/primary_dark_material_light"
+
+        android:padding="5dp"></View>
+
+    <LinearLayout
+        android:id="@+id/viewObj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="1px"
+        android:layout_y="1px"
+        android:orientation="vertical" />
 
 
 </LinearLayout>

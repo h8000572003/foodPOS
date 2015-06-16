@@ -6,7 +6,6 @@ package com.food.foodpos.util.gcm;
 public class RestObject {
     private String code = "";
     private String mesaage = "";
-    private String content = "";
 
     public String getCode() {
         return code;
@@ -24,20 +23,6 @@ public class RestObject {
         this.mesaage = mesaage;
     }
 
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 
-    @Override
-    public String toString() {
-        return "RestObject{" +
-                "code='" + code + '\'' +
-                ", mesaage='" + mesaage + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
 }

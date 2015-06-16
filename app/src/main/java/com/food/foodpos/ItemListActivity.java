@@ -3,8 +3,16 @@ package com.food.foodpos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.util.GcmRegistrationAsyncTask;
+import com.food.foodpos.util.RestUtils;
+import com.food.foodpos.util.gcm.GenericuRestTask;
+import com.food.foodpos.util.gcm.RestAsyTaskListener;
+import com.food.foodpos.util.gcm.RestResultException;
 
 
 /**
@@ -26,11 +34,19 @@ import com.food.foodpos.util.GcmRegistrationAsyncTask;
 public class ItemListActivity extends FragmentActivity
         implements ItemListFragment.Callbacks {
 
+    private static final String TAG = "ItemListActivity";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+
+    private GenericuRestTask billRestAsyTask = null;
+    private JsonBill jsonBill = null;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +62,13 @@ public class ItemListActivity extends FragmentActivity
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((ItemListFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.item_list))
-                    .setActivateOnItemClick(true);
+//            ((ItemListFragment) getSupportFragmentManager()
+//                    .findFragmentById(R.id.item_list))
+//                    .setActivateOnItemClick(true);
         }
-        new GcmRegistrationAsyncTask(this).execute();
+
+        //  new GcmRegistrationAsyncTask(this).execute();
+
 
 
         // TODO: If exposing deep links into your app, handle intents here.
