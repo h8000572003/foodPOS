@@ -1,7 +1,10 @@
 package com.food.foodpos;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,7 @@ import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.dummy.DummyContent;
 import com.food.foodpos.util.BillAsyTask;
+import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 import com.food.foodpos.util.gcm.RestResultException;
 
@@ -160,16 +164,66 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             if (!son.getBill().getFeature().equals("")) {
                 buffer.append("[" + son.getBill().getFeature() + "]");
             }
-            buffer.append("[$" + son.getBill().getDollar() + "]");
-            holder.titile.setText(buffer);
 
+            holder.titile.setText(buffer);
+            if (son.getBill().getIsPaid().equals("Y")) {
+                holder.buyBillBtn.setTextColor(Color.GRAY);
+            } else {
+
+                holder.buyBillBtn.setTextColor(Color.RED);
+            }
+            holder.buyBillBtn.setText("$" + son.getBill().getDollar());
+
+            holder.buyBillBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("買單");
+                    builder.setNegativeButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            son.getBill().setIsPaid("Y");
+                            new Update2PayAsyTask(son.getBill().getTxId()).execute();
+                            notifyDataSetChanged();
+                        }
+                    });
+                    builder.setPositiveButton("取消", null);
+                    builder.create().show();
+
+                }
+            });
 
             for (Meal meal : son.getMeals()) {
                 TextView textView = new TextView(getActivity());
                 textView.setText(meal.getName());
 
                 View addView = mChildInflater.inflate(R.layout.bill_item_layout, parent, false);
+
+                ItemHolder itemHolder = new ItemHolder();
+                itemHolder.titile = (TextView) addView.findViewById(R.id.foodItem);
+                itemHolder.toFoodBtn = (Button) addView.findViewById(R.id.toFoodBtn);
+                itemHolder.reduceNumBtn = (Button) addView.findViewById(R.id.reduceNumBtn);
+                addView.setTag(itemHolder);
+
+
+                StringBuffer itemName = new StringBuffer();
+                itemName.append("[");
+                itemName.append(meal.getNumber());
+                itemName.append("]");
+                itemName.append(meal.getName());
+                if (!meal.getSpcialize().equals("")) {
+                    itemName.append("(");
+                    itemName.append(meal.getSpcialize());
+                    itemName.append(")");
+                }
+
+                itemHolder.titile.setText(itemName.toString());
+                itemHolder.reduceNumBtn.setText(meal.getNumber());
+
                 holder.meals.addView(addView);
+
+
             }
 
             return view;
@@ -179,6 +233,14 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             private TextView titile;
             private Button buyBillBtn;
             private LinearLayout meals;
+        }
+
+        class ItemHolder {
+            private TextView titile;
+            private Button toFoodBtn;
+            private Button reduceNumBtn;
+
+
         }
     }
 

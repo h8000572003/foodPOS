@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
+
     android:orientation="horizontal">
 
     <TextView
@@ -15,8 +15,16 @@
         android:text="招牌肉粽x2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+
     <Button
+        android:id="@+id/reduceNumBtn"
         android:layout_width="wrap_content"
-        android:text="已送出"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="-1" />
+
+    <Button
+        android:id="@+id/toFoodBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已出" />
 </LinearLayout>
