@@ -3,19 +3,15 @@ package com.food.foodpos;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,14 +20,10 @@ import android.widget.Toast;
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.JsonBill;
-import com.food.foodpos.dto.RestObj;
 import com.food.foodpos.dummy.DummyContent;
 import com.food.foodpos.util.BillAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
-import com.food.foodpos.util.gcm.RestAsyTaskListener;
 import com.food.foodpos.util.gcm.RestResultException;
-
-import java.util.List;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -57,30 +49,15 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
      */
     private Callbacks mCallbacks = sDummyCallbacks;
 
-    private BillAsyTask billRestAsyTask = null;
-    private JsonBill jsonBill = null;
-    private ExpandableListView expandableListView;
-
     /**
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    @Override
-    public void message(RestResultException e, JsonBill content) {
-        if (e == null) {
-            this.jsonBill = content;
-            Log.e(TAG, "loadinng fail e:", e);
-        } else {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        this.billRestAsyTask = null;
+    private BillAsyTask billRestAsyTask = null;
+    private JsonBill jsonBill = null;
 
-        ExpandableAdapter billAdpter = new ExpandableAdapter(jsonBill.getContent());
-        expandableListView.setAdapter(billAdpter);
-
-    }
-
+    private ListView listView = null;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -104,20 +81,19 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         }
     };
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ItemListFragment() {
-    }
 
     @Override
+    public void message(RestResultException e, JsonBill content) {
+        if (e == null) {
+            this.jsonBill = content;
+            Log.e(TAG, "loadinng fail e:", e);
+        } else {
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        this.billRestAsyTask = null;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        this.listView.setAdapter(new MyAdapter());
 
-
-        this.load();
     }
 
     private void load() {
@@ -129,85 +105,44 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.billRestAsyTask.execute();
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.bill_layout, container, false);
-        this.expandableListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView);
-
-        return rootView;
-    }
-
-    private class ExpandableAdapter extends BaseExpandableListAdapter {
-        private List<BillSon> billSon = null;
+    private class MyAdapter extends BaseAdapter {
         private LayoutInflater mChildInflater;
-        private LayoutInflater mGroupInflater;
 
-        public ExpandableAdapter(List<BillSon> billSon) {
-            this.billSon = billSon;
+        public MyAdapter() {
             mChildInflater = (LayoutInflater) getActivity()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mGroupInflater = (LayoutInflater) getActivity()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public int getGroupCount() {
+        public int getCount() {
             return jsonBill.getContent().size();
         }
 
         @Override
-        public int getChildrenCount(int groupPosition) {
-            return 2;
+        public Object getItem(int position) {
+            return jsonBill.getContent().get(position);
         }
 
         @Override
-        public Object getGroup(int groupPosition) {
-            return jsonBill.getContent().get(groupPosition);
+        public long getItemId(int position) {
+            return position;
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return jsonBill.getContent().get(groupPosition).getMeals().get(childPosition);
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             GroupViewHolder holder = null;
             View view = convertView;
-            if (null == view) {
 
-
-                view = mGroupInflater.inflate(R.layout.bill_title_layout, parent, false);
-
-
-                holder = new GroupViewHolder();
-                holder.titile = (TextView) view.findViewById(R.id.title);
-                holder.buyBillBtn = (Button) view.findViewById(R.id.buyBillBtn);
-
-                view.setTag(holder);
-            } else {
-                holder = (GroupViewHolder) view.getTag();
-            }
+            view = mChildInflater.inflate(R.layout.bill_title_layout, parent, false);
+            holder = new GroupViewHolder();
+            holder.titile = (TextView) view.findViewById(R.id.title);
+            holder.buyBillBtn = (Button) view.findViewById(R.id.buyBillBtn);
+            holder.meals = (LinearLayout) view.findViewById(R.id.linearLayout);
+            view.setTag(holder);
 
 
             final BillSon son =
-                    jsonBill.getContent().get(groupPosition);
+                    jsonBill.getContent().get(position);
 
             //"[外/內][001][井邊]夫妻 [$500]"
             StringBuffer buffer = new StringBuffer();
@@ -227,55 +162,53 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             }
             buffer.append("[$" + son.getBill().getDollar() + "]");
             holder.titile.setText(buffer);
-            return view;
-        }
 
-        @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            ChildViewHolder holder = null;
-            View view = convertView;
-            if (null == view) {
-                view = mChildInflater.inflate(R.layout.bill_item_layout, parent, true);
 
-                holder = new ChildViewHolder();
-                holder.name = (TextView) view.findViewById(R.id.foodItem);
-                view.setTag(holder);
-            } else {
-                holder = (ChildViewHolder) view.getTag();
+            for (Meal meal : son.getMeals()) {
+                TextView textView = new TextView(getActivity());
+                textView.setText(meal.getName());
+
+                View addView = mChildInflater.inflate(R.layout.bill_item_layout, parent, false);
+                holder.meals.addView(addView);
             }
 
-            Meal meal =
-                    jsonBill.getContent().get(groupPosition).getMeals().get(childPosition);
-
-
-            StringBuffer buffer = new StringBuffer();
-
-            buffer.append("<h2> " + meal.getNumber() + ":" + meal.getName() + "</h2>");
-
-            if (!meal.getSpcialize().equals("")) {
-                buffer.append("<font color=\"#FF0000\">(" + meal.getSpcialize() + ")</font>");
-            }
-
-
-            holder.name.setText(Html.fromHtml(buffer.toString()));
             return view;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
         }
 
         class GroupViewHolder {
-            TextView titile;
-            Button buyBillBtn;
-        }
-
-        class ChildViewHolder {
-            TextView name;
-            Button isFoodOut;
+            private TextView titile;
+            private Button buyBillBtn;
+            private LinearLayout meals;
         }
     }
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ItemListFragment() {
+    }
+
+    @Override
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        load();
+
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.bill_layout, container, false);
+
+        this.listView = (ListView) rootView.findViewById(R.id.detailListView);
+
+
+        return rootView;
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
