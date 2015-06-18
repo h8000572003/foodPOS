@@ -5,7 +5,7 @@ package com.food.db.domainType;
  * 商品狀態
  * Created by 1109001 on 2015/6/2.
  */
-@Table(table = "Bill", name = "帳單")
+@Table(table = "Bill", name = "帳單", keyName = "id")
 public class State implements DomainType {
 
 

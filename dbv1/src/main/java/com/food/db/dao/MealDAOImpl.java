@@ -52,7 +52,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
     };
 
     public MealDAOImpl(Context context, SQLiteDatabase db) {
-        super(db);
+        super(Meal.class, db);
     }
 
     @Override

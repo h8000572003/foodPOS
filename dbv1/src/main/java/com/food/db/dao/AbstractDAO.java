@@ -15,8 +15,13 @@ import java.util.List;
  */
 public abstract class AbstractDAO<T extends DomainType> {
     private SQLiteDatabase db;
+    private Class<T> mClass;
 
-    public AbstractDAO(SQLiteDatabase db) {
+
+    public AbstractDAO(Class<T> mClass, SQLiteDatabase db) {
+
+
+        this.mClass = mClass;
         this.db = db;
     }
 
@@ -92,7 +97,7 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public final void delete(T src) {
 
-     //   db.delete(this.getTableName(), "id=?", new String[]{CommonUtil.});
+        //   db.delete(this.getTableName(), "id=?", new String[]{CommonUtil.});
     }
 
     public final void insert(T src) {
@@ -114,7 +119,7 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public final void modfiy(DomainType domainType) {
 
-       // db.update(this.getTableName(), this.getDomainConvertzr().converter(domainType), "txId=?", new String[]{domainType.getId() + ""});
+        // db.update(this.getTableName(), this.getDomainConvertzr().converter(domainType), "txId=?", new String[]{domainType.getId() + ""});
     }
 
 }

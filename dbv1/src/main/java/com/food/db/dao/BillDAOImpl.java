@@ -14,7 +14,7 @@ import com.food.db.domainType.Bill;
  */
 public class BillDAOImpl extends AbstractDAO<Bill> {
     public BillDAOImpl(Context context, SQLiteDatabase db) {
-        super(db);
+        super(Bill.class, db);
     }
 
     public static AbstractDAO.DomainConverter<Bill> CONVERTER = new DomainConverter<Bill>() {

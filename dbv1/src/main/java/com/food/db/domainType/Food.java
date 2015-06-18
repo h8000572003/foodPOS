@@ -5,7 +5,7 @@ package com.food.db.domainType;
  * 食物
  * Created by 1109001 on 2015/6/2.
  */
-@Table(table = "Food", name = "食物")
+@Table(table = "Food", name = "食物", keyName = "id")
 public class Food implements DomainType {
 
 

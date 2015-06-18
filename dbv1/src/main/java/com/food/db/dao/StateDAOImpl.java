@@ -15,7 +15,7 @@ import com.food.db.domainType.State;
 public class StateDAOImpl extends AbstractDAO<State> {
 
     public StateDAOImpl(Context context, SQLiteDatabase db) {
-        super(db);
+        super(State.class, db);
     }
 
 
@@ -56,7 +56,7 @@ public class StateDAOImpl extends AbstractDAO<State> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id",  "name", "extractDollar"};
+        return new String[]{"id", "name", "extractDollar"};
     }
 
     @Override

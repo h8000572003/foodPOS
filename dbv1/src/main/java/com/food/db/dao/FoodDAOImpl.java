@@ -13,7 +13,7 @@ import com.food.db.domainType.Food;
  */
 public class FoodDAOImpl extends AbstractDAO<Food> {
     public FoodDAOImpl(SQLiteDatabase db) {
-        super(db);
+        super(Food.class, db);
     }
 
     public static AbstractDAO.DomainConverter<Food> CONVERTER = new AbstractDAO.DomainConverter<Food>() {
