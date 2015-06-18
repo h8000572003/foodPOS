@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">db</string>
+
+
+    <string name="create_bill_sql">CREATE TABLE "bill" ("txId" CHAR PRIMARY KEY  NOT NULL  DEFAULT (null) ,"orderDate" CHAR,"orderTime" CHAR,"OutOrIn" CHAR,"isPaid" CHAR,"isMealOut" CHAR,"dollar" VARCHAR,"seat" VARCHAR,"feature" VARCHAR);</string>
+
+    <string name="create_meal_sql">
+       CREATE TABLE "meal" ("id" INTEGER PRIMARY KEY  NOT NULL ,"txId" CHAR NOT NULL  DEFAULT (null) ,"name" VARCHAR NOT NULL ,"spcailize" VARCHAR,"dollar" VARCHAR DEFAULT (0) ,"number" VARCHAR DEFAULT (0) );
+</string>
+
+    <string name="create_food_sql">
+       CREATE TABLE "food" ("id" INTEGER PRIMARY KEY  NOT NULL , "stateId" VARCHAR,"name" VARCHAR,"dollar" VARCHAR)
+    </string>
+
+    <string name="create_state_sql">
+            CREATE TABLE "State"("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"name" VARCHAR,"dollar" VARCHAR);
+    </string>
+
+
+</resources>

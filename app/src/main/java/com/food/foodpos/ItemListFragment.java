@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.JsonBill;
-import com.food.foodpos.dto.MealObj;
 import com.food.foodpos.util.BillAsyTask;
 import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
@@ -60,6 +59,8 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
     private BillAsyTask billRestAsyTask = null;
     private JsonBill jsonBill = null;
+
+    private BillSon nowWorkingList=null;;
 
     private ListView listView = null;
     private ListView unListView = null;
@@ -118,6 +119,28 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.billRestAsyTask.setUrl("/bill/query/unBuy/today");
         this.billRestAsyTask.setRestAsyTaskListener(this);
         this.billRestAsyTask.execute();
+    }
+    private class UnWorkAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
     }
 
     private class MyAdapter extends BaseAdapter {

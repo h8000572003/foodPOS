@@ -6,36 +6,38 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ff8cddff">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="true"
 
-            android:background="#ff56ff58"
             android:gravity="center"
-            android:text="進行中清單" />
+            android:text="進行中清單"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.0" />
+        android:layout_weight="4.0" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ff8cddff">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="true"
-
-            android:background="#ff56ff58"
             android:gravity="center"
-            android:text="未加入清單" />
+
+            android:text="未加入清單"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <ListView

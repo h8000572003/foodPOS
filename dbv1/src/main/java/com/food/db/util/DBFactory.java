@@ -14,8 +14,5 @@ public class DBFactory {
 
     }
 
-    public static synchronized DBMain getColudeDB(Context context) {
-        DBMain dbMain = new DBMainColudeImpl();
-        return dbMain;
-    }
+
 }

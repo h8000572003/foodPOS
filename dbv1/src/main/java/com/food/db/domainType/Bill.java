@@ -7,9 +7,6 @@ package com.food.db.domainType;
 public class Bill implements DomainType {
 
 
-    @Column(name = "id", isPk = true, column = "id", isNum = true)
-    private Long id;//
-
     @Column(name = "txId", isPk = false, column = "txId", isNum = false)
     private String txId;
 
@@ -37,15 +34,11 @@ public class Bill implements DomainType {
     @Column(name = "特徵", isPk = false, column = "feature", isNum = false)
     private String feature;//特徵
 
-
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "是否叫菜", isPk = false, column = "isSpeakOut", isNum = false)
+    private String isSpeakOut = "N";
 
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 
     public String getOrderDate() {
         return orderDate;
@@ -120,18 +113,5 @@ public class Bill implements DomainType {
         this.txId = txId;
     }
 
-    @Override
-    public String toString() {
-        return "Bill{" +
-                "id=" + id +
-                ", orderDate='" + orderDate + '\'' +
-                ", orderTime='" + orderTime + '\'' +
-                ", outOrIn='" + outOrIn + '\'' +
-                ", isPaid='" + isPaid + '\'' +
-                ", isMealOut='" + isMealOut + '\'' +
-                ", dollar='" + dollar + '\'' +
-                ", seat='" + seat + '\'' +
-                ", feature='" + feature + '\'' +
-                '}';
-    }
+
 }

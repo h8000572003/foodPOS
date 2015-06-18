@@ -25,6 +25,9 @@ public class Meal implements DomainType {
     @Column(name = "數量", isPk = false, column = "number", isNum = false)
     private String number;//數量
 
+    @Column(name = "出菜數量", isPk = false, column = "useNumber", isNum = false)
+    private String useNumber;//數量
+
     public Long getId() {
         return id;
     }
@@ -72,5 +75,26 @@ public class Meal implements DomainType {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+
+    public String getUseNumber() {
+        return useNumber;
+    }
+
+    public void setUseNumber(String useNumber) {
+        this.useNumber = useNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", txId='" + txId + '\'' +
+                ", name='" + name + '\'' +
+                ", spcialize='" + spcialize + '\'' +
+                ", dolloar='" + dolloar + '\'' +
+                ", number='" + number + '\'' +
+                '}';
     }
 }

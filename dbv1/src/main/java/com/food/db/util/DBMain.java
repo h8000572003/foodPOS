@@ -1,7 +1,7 @@
 package com.food.db.util;
 
 import com.food.db.domainType.DomainType;
-import com.parse.ParseException;
+
 
 import java.io.Closeable;
 import java.util.List;

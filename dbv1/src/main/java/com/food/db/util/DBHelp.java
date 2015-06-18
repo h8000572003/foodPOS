@@ -23,6 +23,7 @@ public class DBHelp extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         db.execSQL(context.getString(R.string.create_bill_sql));
         db.execSQL(context.getString(R.string.create_food_sql));
         db.execSQL(context.getString(R.string.create_meal_sql));

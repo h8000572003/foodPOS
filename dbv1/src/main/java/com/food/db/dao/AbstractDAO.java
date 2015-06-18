@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.food.db.domainType.DomainType;
+import com.food.db.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,7 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public final void delete(T src) {
 
-        db.delete(this.getTableName(), "id=?", new String[]{src.getId().toString()});
+     //   db.delete(this.getTableName(), "id=?", new String[]{CommonUtil.});
     }
 
     public final void insert(T src) {
@@ -113,7 +114,7 @@ public abstract class AbstractDAO<T extends DomainType> {
 
     public final void modfiy(DomainType domainType) {
 
-        db.update(this.getTableName(), this.getDomainConvertzr().converter(domainType), "id=?", new String[]{domainType.getId() + ""});
+       // db.update(this.getTableName(), this.getDomainConvertzr().converter(domainType), "txId=?", new String[]{domainType.getId() + ""});
     }
 
 }
