@@ -8,13 +8,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.JsonBill;
-import com.food.foodpos.dummy.DummyContent;
+import com.food.foodpos.dto.MealObj;
 import com.food.foodpos.util.BillAsyTask;
 import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
@@ -62,6 +62,13 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     private JsonBill jsonBill = null;
 
     private ListView listView = null;
+    private ListView unListView = null;
+
+
+    private GridView gridView;
+    private GridView unGridView;
+
+    private boolean isTable = true;//是平板
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -90,10 +97,14 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public void message(RestResultException e, JsonBill content) {
         if (e == null) {
             this.jsonBill = content;
+
+
             Log.e(TAG, "loadinng fail e:", e);
         } else {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+
         this.billRestAsyTask = null;
 
         this.listView.setAdapter(new MyAdapter());
@@ -265,7 +276,18 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.bill_layout, container, false);
 
-        this.listView = (ListView) rootView.findViewById(R.id.detailListView);
+
+        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.unGridView = (GridView) rootView.findViewById(R.id.unGridView);
+
+        this.listView = (ListView) rootView.findViewById(R.id.listView);
+        this.unListView = (ListView) rootView.findViewById(R.id.unListView);
+
+        if (this.gridView != null) {
+            this.isTable = true;
+        } else {
+            this.isTable = false;
+        }
 
 
         return rootView;
