@@ -3,7 +3,7 @@ package com.food.db.domainType;
 /**
  * Created by 1109001 on 2015/6/2.
  */
-@Table(table = "Bill", name = "帳單")
+@Table(table = "Bill", name = "帳單", keyName = "txId")
 public class Bill implements DomainType {
 
 
@@ -36,8 +36,6 @@ public class Bill implements DomainType {
 
     @Column(name = "是否叫菜", isPk = false, column = "isSpeakOut", isNum = false)
     private String isSpeakOut = "N";
-
-
 
 
     public String getOrderDate() {
@@ -114,4 +112,11 @@ public class Bill implements DomainType {
     }
 
 
+    public String getIsSpeakOut() {
+        return isSpeakOut;
+    }
+
+    public void setIsSpeakOut(String isSpeakOut) {
+        this.isSpeakOut = isSpeakOut;
+    }
 }

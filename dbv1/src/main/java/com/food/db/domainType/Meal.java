@@ -4,7 +4,7 @@ package com.food.db.domainType;
  * 餐點
  * Created by 1109001 on 2015/6/2.
  */
-@Table(table = "Bill", name = "帳單")
+@Table(table = "Bill", name = "帳單", keyName = "id")
 public class Meal implements DomainType {
 
     @Column(name = "id", isPk = false, column = "id", isNum = true)

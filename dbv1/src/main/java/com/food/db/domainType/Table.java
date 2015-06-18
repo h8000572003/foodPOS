@@ -14,4 +14,7 @@ public @interface Table {
     String table();
 
     String name();
+
+    String keyName();
+
 }

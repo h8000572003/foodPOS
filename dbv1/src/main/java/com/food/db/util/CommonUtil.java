@@ -69,7 +69,7 @@ public class CommonUtil {
         return result;
     }
 
-    private static void setObject(Object object, String name, Object value) {
+    public static void setObject(Object object, String name, Object value) {
         Field f = null;
 
         try {
@@ -86,7 +86,7 @@ public class CommonUtil {
 
     }
 
-    private static Object getObject(Object object, String name) {
+    public static Object getObject(Object object, String name) {
         Field f = null;
         Object obj = null;
         try {

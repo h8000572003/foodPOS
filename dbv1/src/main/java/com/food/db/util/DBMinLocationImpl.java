@@ -40,7 +40,8 @@ public class DBMinLocationImpl implements DBMain {
     @Override
     public void delete(DomainType type) {
         final Table table = type.getClass().getAnnotation(Table.class);
-       // this.db.delete(table.table(), "id=?", new String[]{type.getId() + ""});
+
+        this.db.delete(table.table(), table.keyName() + "=?", new String[]{CommonUtil.getObject(type, table.keyName()).toString()});
     }
 
     @Override
@@ -54,7 +55,7 @@ public class DBMinLocationImpl implements DBMain {
     public void modfiy(DomainType type) {
         final Table table = type.getClass().getAnnotation(Table.class);
         final ContentValues values = CommonUtil.getValueByDomain(type);
-       // this.db.update(table.table(), values, "id=?", new String[]{type.getId() + ""});
+        this.db.update(table.table(), values, table.keyName() + "=?", new String[]{CommonUtil.getObject(type, table.keyName()).toString()});
 
 
     }
