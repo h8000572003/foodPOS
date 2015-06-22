@@ -297,7 +297,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.bill_layout, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_bill_layout, container, false);
 
 
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);

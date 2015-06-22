@@ -13,10 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="true"
-    android:textColor="@android:color/white"
             android:gravity="center"
             android:text="進行中清單"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <ListView
@@ -35,9 +35,9 @@
             android:layout_height="wrap_content"
             android:autoText="true"
             android:gravity="center"
-            android:textColor="@android:color/white"
             android:text="未加入清單"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <ListView
