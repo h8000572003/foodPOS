@@ -39,6 +39,8 @@ public class OrderFragment extends Fragment {
     private OrderAdapter orderAdapter = null;
     private FeatureAdapter featureAdapter = null;
 
+    private static final String MESSAGE = "[%s]%s-----[$%d]";//名稱 [數量]-[$]=[$]
+
 
     private class ViewHold {
         private GridView foodGridView;
@@ -114,7 +116,12 @@ public class OrderFragment extends Fragment {
 
 
             final OrderAddItem item = items.get(position);
-            holder.title.setText(item.getNo() + ":" + item.getName() + "\n" + item.getFeature());
+
+           String title= String.format(MESSAGE,item.getNo(), item.getName(),  item.getDollar());//名稱 [數量]-[$]=[$];
+           if(StringUtils.isNotBlank(item.getFeature())){
+               title+="\n"+item.getFeature();
+           }
+            holder.title.setText(title);
             holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
