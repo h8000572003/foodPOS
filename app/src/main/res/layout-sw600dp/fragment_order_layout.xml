@@ -87,7 +87,8 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="買單" />
+                    android:text="買單"
+                    android:id="@+id/orderBtn" />
 
             </LinearLayout>
 

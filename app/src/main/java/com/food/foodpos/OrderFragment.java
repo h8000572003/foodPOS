@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.food.db.domainType.Bill;
+import com.food.db.domainType.Meal;
+import com.food.foodpos.dto.BaseRestObj;
+import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.OrderAddItem;
 import com.food.foodpos.dto.OrderDTO;
+import com.food.foodpos.util.AeUtils;
 import com.food.foodpos.util.Feature;
 import com.food.foodpos.util.Food;
+import com.food.foodpos.util.FoodUploadAsyTask;
+import com.food.foodpos.util.gcm.GenericuRestTask;
+import com.food.foodpos.util.gcm.RestResultException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,8 +39,9 @@ import java.util.Set;
 /**
  * Created by Andy on 2015/6/18.
  */
-public class OrderFragment extends Fragment {
+public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyTaskListener<BaseRestObj> {
 
+    private static final String TAG = "OrderFragment";
     private ViewHold viewHold = new ViewHold();
     private OrderDTO orderDTO = new OrderDTO();
 
@@ -40,6 +50,13 @@ public class OrderFragment extends Fragment {
     private FeatureAdapter featureAdapter = null;
 
     private static final String MESSAGE = "[%s]%s-----[$%d]";//名稱 [數量]-[$]=[$]
+
+    private static FoodUploadAsyTask foodUploadAsyTask;
+
+    @Override
+    public void message(RestResultException e, BaseRestObj content) {
+        Log.i(TAG, "insert...");
+    }
 
 
     private class ViewHold {
@@ -64,6 +81,8 @@ public class OrderFragment extends Fragment {
         private Button b0;
         private Button cleanBtn;
         private Button addBtn;
+        private Button orderBtn;
+
     }
 
     protected interface OnSetInitLinster {
@@ -117,10 +136,10 @@ public class OrderFragment extends Fragment {
 
             final OrderAddItem item = items.get(position);
 
-           String title= String.format(MESSAGE,item.getNo(), item.getName(),  item.getDollar());//名稱 [數量]-[$]=[$];
-           if(StringUtils.isNotBlank(item.getFeature())){
-               title+="\n"+item.getFeature();
-           }
+            String title = String.format(MESSAGE, item.getNo(), item.getName(), item.getDollar());//名稱 [數量]\t[$]=[$];
+            if (StringUtils.isNotBlank(item.getFeature())) {
+                title += "\n" + item.getFeature();
+            }
             holder.title.setText(title);
             holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -366,6 +385,60 @@ public class OrderFragment extends Fragment {
         }
     }
 
+    private class ToOrderListener implements View.OnClickListener {
+
+
+        @Override
+        public void onClick(View view) {
+
+            FoodUploadAsyTask foodUploadAsyTask = new FoodUploadAsyTask();
+
+
+            Bill bill = new Bill();
+
+            bill.setFeature("");
+            bill.setIsMealOut("O");
+            bill.setIsMealOut("N");
+            bill.setIsPaid("Y");
+            bill.setSeat("1");
+            bill.setTxId(AeUtils.getNowDate() + AeUtils.getNowTime());
+            bill.setOrderDate(AeUtils.getNowDate());
+            bill.setOrderTime(AeUtils.getNowTime());
+            bill.setIsSpeakOut("N");
+            bill.setIsMealOut("N");
+            bill.setOutOrIn("O");
+
+            List<Meal> meals = new ArrayList<>();
+
+            int total = 0;
+            for (OrderAddItem item : orderDTO.getItems()) {
+                final Meal meal = new Meal();
+                meal.setTxId(bill.getTxId());
+                meal.setDolloar(item.getDollar() + "");
+                meal.setName(item.getName());
+                meal.setSpcialize(item.getFeature());
+                meal.setNumber(item.getNo());
+                meal.setUseNumber("0");
+
+
+                meals.add(meal);
+
+                total += Integer.parseInt(item.getNo()) * item.getDollar();
+
+            }
+            bill.setDollar(total + "");
+
+            BillSon son = new BillSon();
+            son.setBill(bill);
+            son.setMeals(meals);
+
+            foodUploadAsyTask.setSon(son);
+            foodUploadAsyTask.setRestAsyTaskListener(OrderFragment.this);
+            foodUploadAsyTask.execute();
+
+        }
+    }
+
     private class MyAdd implements View.OnClickListener {
         private EditText noEdit;
         private EditText foodEit;
@@ -431,6 +504,7 @@ public class OrderFragment extends Fragment {
         this.viewHold.foodEdit = (EditText) rootView.findViewById(R.id.foodEdit);
         this.viewHold.noEdit = (EditText) rootView.findViewById(R.id.noEdit);
         this.viewHold.totalMoneyLab = (TextView) rootView.findViewById(R.id.totalMoneyLab);
+        this.viewHold.orderBtn = (Button) rootView.findViewById(R.id.orderBtn);
 
         this.viewHold.b0 = (Button) rootView.findViewById(R.id.b0);
         this.viewHold.b1 = (Button) rootView.findViewById(R.id.b1);
@@ -458,6 +532,7 @@ public class OrderFragment extends Fragment {
         this.viewHold.b9.setOnClickListener(new MyClick("9", this.viewHold.noEdit));
         this.viewHold.cleanBtn.setOnClickListener(new MyClick("", this.viewHold.noEdit));
         this.viewHold.addBtn.setOnClickListener(new MyAdd(this.viewHold.noEdit, this.viewHold.foodEdit, this.viewHold.featureEdit));
+        this.viewHold.orderBtn.setOnClickListener(new ToOrderListener());
 
 
         this.featureAdapter = new FeatureAdapter(viewHold.featureEdit);

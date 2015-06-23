@@ -9,10 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
         android:background="#ff2b88ff"
-        >
+
+        android:orientation="horizontal">
 
 
         <TextView
@@ -21,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="[外/內][001][井邊]夫妻 [$500]"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/buyBillBtn"
@@ -35,17 +34,21 @@
     </LinearLayout>
 
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="15dp"
-        >
+        android:layout_height="match_parent">
 
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

@@ -2,8 +2,11 @@ package com.food.foodpos;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,11 +25,17 @@ import android.widget.Toast;
 
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.ItemListDTO;
 import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.util.BillAsyTask;
 import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 import com.food.foodpos.util.gcm.RestResultException;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -58,18 +67,17 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
     private BillAsyTask billRestAsyTask = null;
-    private JsonBill jsonBill = null;
-
-    private BillSon nowWorkingList=null;;
-
-    private ListView listView = null;
-    private ListView unListView = null;
+    private ItemListDTO itemListDTO = new ItemListDTO();
 
 
     private GridView gridView;
     private GridView unGridView;
 
     private boolean isTable = true;//是平板
+
+    private UnWorkAdapter unWorkAdapter;
+    private WorkAdapter workAdapter;
+
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -97,10 +105,35 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     @Override
     public void message(RestResultException e, JsonBill content) {
         if (e == null) {
-            this.jsonBill = content;
+
+            List<BillSon> bills = content.getContent();
+            List<BillSon> wantAddList = new ArrayList<>();
+            List<BillSon> tmps = new ArrayList<>();
+            tmps.addAll(itemListDTO.getAddList());
+            tmps.addAll(itemListDTO.getUnAddList());
+            for (BillSon billSon : bills) {
+
+                boolean isTheSame=false;
+                for (BillSon all : tmps) {
+
+                    if ( StringUtils.equals(all.getBill().getTxId(),billSon.getBill().getTxId())) {
+                        isTheSame=true;
+                        break;
+                    }
+                }
+                if(!isTheSame){
+                    wantAddList.add(billSon);
+                }
 
 
-            Log.e(TAG, "loadinng fail e:", e);
+
+            }
+
+
+            itemListDTO.getUnAddList().addAll(wantAddList);
+
+            Log
+                    .e(TAG, "loadinng fail e:", e);
         } else {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -108,7 +141,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
         this.billRestAsyTask = null;
 
-        this.listView.setAdapter(new MyAdapter());
+        this.unWorkAdapter.notifyDataSetChanged();
 
     }
 
@@ -120,45 +153,115 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.billRestAsyTask.setRestAsyTaskListener(this);
         this.billRestAsyTask.execute();
     }
+
+
     private class UnWorkAdapter extends BaseAdapter {
 
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
-        }
-    }
-
-    private class MyAdapter extends BaseAdapter {
+        private List<BillSon> unAddList;
         private LayoutInflater mChildInflater;
 
-        public MyAdapter() {
+        public UnWorkAdapter(List<BillSon> unAddList) {
+            this.unAddList = unAddList;
             mChildInflater = (LayoutInflater) getActivity()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public int getCount() {
-            return jsonBill.getContent().size();
+            return unAddList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return jsonBill.getContent().get(position);
+            return unAddList.get(0);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent)
+
+        {
+
+            View rootView = convertView;
+            Holder holder = null;
+            if (rootView == null) {
+                rootView = mChildInflater.inflate(R.layout.item_un_add_bill_layout, parent, false);
+
+                holder = new Holder();
+                holder.message = (TextView) rootView.findViewById(R.id.message);
+                holder.addBillBtn = (Button) rootView.findViewById(R.id.addBillBtn);
+
+                holder.addBillBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        BillSon son =
+                                unAddList.get(position);
+
+                        unAddList.remove(son);
+
+                        itemListDTO.getAddList().add(son);
+
+                        notifyDataSetChanged();
+                        workAdapter.notifyDataSetChanged();
+                    }
+                });
+
+
+                rootView.setTag(holder);
+            } else {
+
+                holder = (Holder) rootView.getTag();
+            }
+
+
+            BillSon son = unAddList.get(position);
+
+            StringBuffer stringBuffer = new StringBuffer();
+
+            for (Meal meal : son.getMeals()) {
+                stringBuffer.append("[" + meal.getNumber() + "]");
+                stringBuffer.append("" + meal.getName() + "");
+                if (!StringUtils.isEmpty(meal.getSpcialize())) {
+                    stringBuffer.append("(" + meal.getSpcialize() + ")\n");
+                }
+            }
+            holder.message.setText(stringBuffer.toString());
+
+
+            return rootView;
+
+
+        }
+
+        private class Holder {
+            private TextView message;
+            private Button addBillBtn;
+        }
+    }
+
+    private class WorkAdapter extends BaseAdapter {
+        private LayoutInflater mChildInflater;
+        private List<BillSon> addList;
+
+
+        public WorkAdapter(List<BillSon> addList) {
+            mChildInflater = (LayoutInflater) getActivity()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.addList = addList;
+        }
+
+        @Override
+        public int getCount() {
+            return addList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.addList.get(position);
         }
 
         @Override
@@ -180,7 +283,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
 
             final BillSon son =
-                    jsonBill.getContent().get(position);
+                    addList.get(position);
 
             //"[外/內][001][井邊]夫妻 [$500]"
             StringBuffer buffer = new StringBuffer();
@@ -289,8 +392,42 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        load();
 
+        load();
+    }
+
+    private BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ItemListFragment.this.broadcastReceived(intent);
+        }
+    };
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+        getActivity().unregisterReceiver(mUpdateReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addCategory("com.food.foodpos");
+        intentFilter.addAction("com.google.android.c2dm.intent.RECEIVE");
+        intentFilter.addAction("com.google.android.c2dm.intent.REGISTRATION");
+
+        intentFilter.setPriority(Integer.MAX_VALUE);
+
+        getActivity().registerReceiver(this.mUpdateReceiver, intentFilter);
+    }
+
+    public void broadcastReceived(Intent intent) {
+        Bundle extras = intent.getExtras();
+        String mes = extras.getString("message");
+        load();
     }
 
 
@@ -303,14 +440,18 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.unGridView = (GridView) rootView.findViewById(R.id.unGridView);
 
-        this.listView = (ListView) rootView.findViewById(R.id.listView);
-        this.unListView = (ListView) rootView.findViewById(R.id.unListView);
 
         if (this.gridView != null) {
             this.isTable = true;
         } else {
             this.isTable = false;
         }
+
+        this.workAdapter = new WorkAdapter(itemListDTO.getAddList());
+        this.gridView.setAdapter(this.workAdapter);
+
+        this.unWorkAdapter = new UnWorkAdapter(itemListDTO.getUnAddList());
+        this.unGridView.setAdapter(this.unWorkAdapter);
 
 
         return rootView;

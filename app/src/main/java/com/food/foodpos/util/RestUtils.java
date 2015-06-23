@@ -1,24 +1,22 @@
 package com.food.foodpos.util;
 
-import android.util.Log;
-
 import com.food.db.domainType.Bill;
 import com.food.foodpos.util.gcm.Contract;
+import com.food.foodpos.util.gcm.MyNameValuePair;
 import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +31,7 @@ public class RestUtils {
         DefaultHttpClient demo = new DefaultHttpClient();
         demo.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 
-        HttpGet httpGet = new HttpGet(Contract.REST_ROOT_URL+sonUrl);
+        HttpGet httpGet = new HttpGet(Contract.REST_ROOT_URL + sonUrl);
 
         try {
             HttpResponse response = demo.execute(httpGet);
@@ -43,6 +41,33 @@ public class RestUtils {
             return "";
         }
     }
+
+    public static String getStringFromUrl(String sonUrl, List<MyNameValuePair> myNameValuePairList) {
+
+        DefaultHttpClient demo = new DefaultHttpClient();
+        demo.getParams().setParameter("http.protocol.content-charset", "UTF-8");
+
+
+        HttpPost httpPost = new HttpPost(Contract.REST_ROOT_URL + sonUrl);
+        List<NameValuePair> pairs = new ArrayList<>();
+        for (MyNameValuePair valuePair : myNameValuePairList) {
+            pairs.add(new BasicNameValuePair(valuePair.getName(), valuePair.getValue()));
+        }
+
+
+
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(pairs, HTTP.UTF_8));
+            HttpResponse response = demo.execute(httpPost);
+            return EntityUtils.toString(response.getEntity(),"utf-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+
+    }
+
 
     public static List<Bill> getUnBuyBillsList() {
 

@@ -13,7 +13,7 @@ public abstract class GenericuRestTask<T extends RestObj> extends AsyncTask<Void
 
     private RestAsyTaskListener restAsyTaskListener;
 
-    private String url = "";
+    protected String url = "";
 
     public interface RestAsyTaskListener<T extends RestObj> {
         void message(RestResultException e, T content);
@@ -32,7 +32,7 @@ public abstract class GenericuRestTask<T extends RestObj> extends AsyncTask<Void
     }
 
     @Override
-    protected final String doInBackground(Void... params) {
+    protected  String doInBackground(Void... params) {
         return RestUtils.getStringFromUrl(url);
     }
 
