@@ -4,12 +4,12 @@ import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 
 /**
- * Created by Andy on 2015/6/16.
+ * Created by Andy on 15/6/25.
  */
-public class BillAsyTask extends GenericuRestTask<JsonBill> {
+public class LoadNoSpeakOutBillTask extends GenericuRestTask<JsonBill> {
 
 
-    public BillAsyTask() {
+    public LoadNoSpeakOutBillTask() {
         setUrl("/bill/query/unBuy/today/noSpeakOut");
     }
 

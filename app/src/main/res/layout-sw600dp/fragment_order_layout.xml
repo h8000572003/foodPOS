@@ -11,30 +11,6 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/radioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="內用" />
-
-            <RadioButton
-                android:id="@+id/radioButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="外帶" />
-
-        </RadioGroup>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#9367693f"></View>
 
         <GridView
             android:id="@+id/foodGridView"
@@ -50,7 +26,6 @@
 
 
         </View>
-
 
         <GridView
             android:id="@+id/featureGridView"
@@ -74,26 +49,39 @@
 
 
         <LinearLayout
-
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/outOrInRadioGroup"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
 
-                <Button
+                <RadioButton
+                    android:id="@+id/inRadioBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="買單"
-                    android:id="@+id/orderBtn" />
+                    android:text="內用" />
 
-            </LinearLayout>
+                <RadioButton
+                    android:id="@+id/outRadioBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="外帶" />
 
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/orderBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="買單" />
 
         </LinearLayout>
+
 
         <View
             android:layout_width="1dp"
@@ -105,8 +93,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
-
-
 
 
             <LinearLayout
@@ -155,11 +141,11 @@
 
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <EditText
                             android:id="@+id/noEdit"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:editable="false"
@@ -167,7 +153,7 @@
 
                         <EditText
                             android:id="@+id/foodEdit"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:editable="false"
@@ -175,7 +161,7 @@
 
                         <EditText
                             android:id="@+id/featureEdit"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
                             android:editable="false"

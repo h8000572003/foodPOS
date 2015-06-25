@@ -17,24 +17,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.food.db.domainType.Bill;
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.ItemListDTO;
 import com.food.foodpos.dto.JsonBill;
+import com.food.foodpos.service.ToFoodService;
+import com.food.foodpos.service.ToFoodServiceImpl;
 import com.food.foodpos.util.BillAsyTask;
+import com.food.foodpos.util.LoadNoSpeakOutBillTask;
 import com.food.foodpos.util.Update2PayAsyTask;
+import com.food.foodpos.util.UpdateIsSpeakOutAsyTask;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 import com.food.foodpos.util.gcm.RestResultException;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,13 +76,19 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     private ItemListDTO itemListDTO = new ItemListDTO();
 
 
-    private GridView gridView;
-    private GridView unGridView;
+    private ListView gridView;
+    private ListView unGridView;
+    private TextView loadUnSpeakOutBillBtn;
+    private TextView showMeaage;
 
-    private boolean isTable = true;//是平板
+
+    private ImageButton loadBtn;
+
 
     private UnWorkAdapter unWorkAdapter;
     private WorkAdapter workAdapter;
+
+    private ToFoodService toFoodService = ToFoodServiceImpl.get();
 
 
     /**
@@ -104,38 +116,17 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
     @Override
     public void message(RestResultException e, JsonBill content) {
+        this.loadUnSpeakOutBillBtn.setVisibility(View.GONE);
         if (e == null) {
 
-            List<BillSon> bills = content.getContent();
-            List<BillSon> wantAddList = new ArrayList<>();
-            List<BillSon> tmps = new ArrayList<>();
-            tmps.addAll(itemListDTO.getAddList());
-            tmps.addAll(itemListDTO.getUnAddList());
-            for (BillSon billSon : bills) {
 
-                boolean isTheSame=false;
-                for (BillSon all : tmps) {
+            itemListDTO.getUnAddList().clear();
+            itemListDTO.getUnAddList().addAll(content.getContent());
+            setShowMeaage();
 
-                    if ( StringUtils.equals(all.getBill().getTxId(),billSon.getBill().getTxId())) {
-                        isTheSame=true;
-                        break;
-                    }
-                }
-                if(!isTheSame){
-                    wantAddList.add(billSon);
-                }
-
-
-
-            }
-
-
-            itemListDTO.getUnAddList().addAll(wantAddList);
-
-            Log
-                    .e(TAG, "loadinng fail e:", e);
         } else {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "loadinng fail e:", e);
         }
 
 
@@ -149,7 +140,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         if (this.billRestAsyTask == null) {
             this.billRestAsyTask = new BillAsyTask();
         }
-        this.billRestAsyTask.setUrl("/bill/query/unBuy/today");
+
         this.billRestAsyTask.setRestAsyTaskListener(this);
         this.billRestAsyTask.execute();
     }
@@ -198,30 +189,30 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                 holder.addBillBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        BillSon son =
+                        final BillSon son =
                                 unAddList.get(position);
 
                         unAddList.remove(son);
-
-                        itemListDTO.getAddList().add(son);
-
+                        itemListDTO.setNowSelectBill(son);
+                        toFoodService.insertToWork(itemListDTO, getActivity());
+                        itemListDTO.getAddList().clear();
+                        itemListDTO.getAddList().addAll(toFoodService.queryNowWorkList(itemListDTO, getActivity()));
                         notifyDataSetChanged();
                         workAdapter.notifyDataSetChanged();
+                        setShowMeaage();
+                        new UpdateIsSpeakOutAsyTask(son.getBill().getTxId(), "Y").execute();
                     }
                 });
 
 
                 rootView.setTag(holder);
             } else {
-
                 holder = (Holder) rootView.getTag();
             }
 
 
             BillSon son = unAddList.get(position);
-
             StringBuffer stringBuffer = new StringBuffer();
-
             for (Meal meal : son.getMeals()) {
                 stringBuffer.append("[" + meal.getNumber() + "]");
                 stringBuffer.append("" + meal.getName() + "");
@@ -274,44 +265,175 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             GroupViewHolder holder = null;
             View view = convertView;
 
-            view = mChildInflater.inflate(R.layout.bill_title_layout, parent, false);
-            holder = new GroupViewHolder();
-            holder.titile = (TextView) view.findViewById(R.id.title);
-            holder.buyBillBtn = (Button) view.findViewById(R.id.buyBillBtn);
-            holder.meals = (LinearLayout) view.findViewById(R.id.linearLayout);
-            view.setTag(holder);
+            if (view == null) {
+                view = mChildInflater.inflate(R.layout.bill_title_layout, parent, false);
+                holder = new GroupViewHolder();
+                holder.titile = (TextView) view.findViewById(R.id.title);
+                holder.buyBillBtn = (Button) view.findViewById(R.id.buyBillBtn);
+                holder.meals = (LinearLayout) view.findViewById(R.id.linearLayout);
+                holder.closeBtn = (Button) view.findViewById(R.id.closeBtn);
+
+                view.setTag(holder);
+            } else {
+                holder = (GroupViewHolder) view.getTag();
+            }
+            holder.meals.removeAllViews();
 
 
             final BillSon son =
                     addList.get(position);
 
+
+            this.setTitleShow(son, holder.titile);
+            this.setBuyBtnShow(son, holder.buyBillBtn);
+            this.setCloseBtnShow(son, holder.closeBtn);
+
+
+            for (final Meal meal : son.getMeals()) {
+
+                final View addView = mChildInflater.inflate(R.layout.bill_item_layout, parent, false);
+
+                final ItemHolder itemHolder = new ItemHolder();
+                itemHolder.titile = (TextView) addView.findViewById(R.id.foodItem);
+                itemHolder.toFoodBtn = (Button) addView.findViewById(R.id.toFoodBtn);
+                itemHolder.reduceNumBtn = (Button) addView.findViewById(R.id.reduceNumBtn);
+                addView.setTag(itemHolder);
+
+                this.setSubTitle(meal, itemHolder.titile);//設定顯示標題
+                this.setReduceBtn(son, meal, itemHolder.reduceNumBtn);
+                this.setFoodBtn(son, meal, itemHolder.toFoodBtn);
+
+                holder.meals.addView(addView);
+
+
+            }
+
+            return view;
+        }
+
+        private void setFoodBtn(final BillSon json, final Meal meal, Button button) {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    itemListDTO.setNowSelectBill(json);
+                    itemListDTO.setNowMeal(meal);
+                    toFoodService.toFood(itemListDTO, getActivity());
+                    workAdapter.notifyDataSetChanged();
+                    setShowMeaage();
+                }
+            });
+
+        }
+
+        private void setReduceBtn(final BillSon json, final Meal meal, Button button) {
+
+            int showValue = Integer.parseInt(meal.getNumber()) - Integer.parseInt(meal.getUseNumber());
+            button.setText(showValue + "");
+
+            if (StringUtils.equals(meal.getUseNumber(), meal.getNumber())) {
+
+                button.setEnabled(false);
+            }
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    itemListDTO.setNowSelectBill(json);
+                    itemListDTO.setNowMeal(meal);
+
+                    toFoodService.reduceNum(itemListDTO, getActivity());
+
+
+                    notifyDataSetChanged();
+                    setShowMeaage();
+                }
+            });
+        }
+
+        public void setSubTitle(Meal meal, TextView titile) {
+            final StringBuffer itemName = new StringBuffer();
+            itemName.append("[");
+            itemName.append(meal.getNumber());
+            itemName.append("]");
+            itemName.append(meal.getName());
+            if (!meal.getSpcialize().equals("")) {
+                itemName.append("(");
+                itemName.append(")");
+            }
+
+            titile.setText(itemName.toString());
+        }
+
+
+        private String getTitle(BillSon son) {
+
             //"[外/內][001][井邊]夫妻 [$500]"
             StringBuffer buffer = new StringBuffer();
-
-
+            buffer.append("sn:" + son.getBill().getUseNo());
             if (son.getBill().getOutOrIn().equals("O")) {
                 buffer.append("[外帶]");
             } else {
                 buffer.append("[內用]");
             }
-
             buffer.append("[" + son.getBill().getSeat() + "]");
-
-
             if (!son.getBill().getFeature().equals("")) {
                 buffer.append("[" + son.getBill().getFeature() + "]");
             }
+            return buffer.toString();
+        }
 
-            holder.titile.setText(buffer);
-            if (son.getBill().getIsPaid().equals("Y")) {
-                holder.buyBillBtn.setTextColor(Color.GRAY);
+        private void setTitleShow(final BillSon json, TextView textView) {
+            textView.setText(this.getTitle(json));
+
+        }
+
+        private void setCloseBtnShow(final BillSon json, Button button) {
+
+            final Bill bill =
+                    json.getBill();
+
+            if (this.checkIsMealOutAndPay(bill)) {
+                button.setVisibility(View.VISIBLE);
             } else {
-
-                holder.buyBillBtn.setTextColor(Color.RED);
+                button.setVisibility(View.GONE);
             }
-            holder.buyBillBtn.setText("$" + son.getBill().getDollar());
 
-            holder.buyBillBtn.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toFoodService.toClose(itemListDTO, getActivity());
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        /**
+         * 是否已經出菜且結帳
+         *
+         * @param bill
+         * @return
+         */
+        private boolean checkIsMealOutAndPay(Bill bill) {
+            boolean isMealOut = StringUtils.equals(bill.getIsMealOut(), "Y");
+            boolean isPaid = StringUtils.equals(bill.getIsPaid(), "Y");
+            if (isMealOut && isPaid) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private void setBuyBtnShow(final BillSon son, Button button) {
+            if (son.getBill().getIsPaid().equals("Y")) {
+                button.setTextColor(Color.GRAY);
+            } else {
+                button.setTextColor(Color.RED);
+            }
+
+            button.setText("$" + son.getBill().getDollar());
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -330,46 +452,13 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
                 }
             });
-
-            for (Meal meal : son.getMeals()) {
-                TextView textView = new TextView(getActivity());
-                textView.setText(meal.getName());
-
-                View addView = mChildInflater.inflate(R.layout.bill_item_layout, parent, false);
-
-                ItemHolder itemHolder = new ItemHolder();
-                itemHolder.titile = (TextView) addView.findViewById(R.id.foodItem);
-                itemHolder.toFoodBtn = (Button) addView.findViewById(R.id.toFoodBtn);
-                itemHolder.reduceNumBtn = (Button) addView.findViewById(R.id.reduceNumBtn);
-                addView.setTag(itemHolder);
-
-
-                StringBuffer itemName = new StringBuffer();
-                itemName.append("[");
-                itemName.append(meal.getNumber());
-                itemName.append("]");
-                itemName.append(meal.getName());
-                if (!meal.getSpcialize().equals("")) {
-                    itemName.append("(");
-                    itemName.append(meal.getSpcialize());
-                    itemName.append(")");
-                }
-
-                itemHolder.titile.setText(itemName.toString());
-                itemHolder.reduceNumBtn.setText(meal.getNumber());
-
-                holder.meals.addView(addView);
-
-
-            }
-
-            return view;
         }
 
         class GroupViewHolder {
             private TextView titile;
             private Button buyBillBtn;
             private LinearLayout meals;
+            private Button closeBtn;
         }
 
         class ItemHolder {
@@ -380,6 +469,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
         }
     }
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -393,7 +483,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        load();
+
     }
 
     private BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
@@ -427,7 +517,10 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public void broadcastReceived(Intent intent) {
         Bundle extras = intent.getExtras();
         String mes = extras.getString("message");
-        load();
+        Toast.makeText(getActivity(), mes, Toast.LENGTH_SHORT).show();
+
+        this.loadUnSpeakOutBillBtn.setVisibility(View.VISIBLE);
+
     }
 
 
@@ -437,15 +530,14 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         View rootView = inflater.inflate(R.layout.fragment_bill_layout, container, false);
 
 
-        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.unGridView = (GridView) rootView.findViewById(R.id.unGridView);
+        this.gridView = (ListView) rootView.findViewById(R.id.gridView);
+        this.unGridView = (ListView) rootView.findViewById(R.id.unGridView);
+        this.loadUnSpeakOutBillBtn = (TextView) rootView.findViewById(R.id.loadUnSpeakOutBillBtn);
+        this.showMeaage = (TextView) rootView.findViewById(R.id.showMeaage);
+        this.loadUnSpeakOutBillBtn.setVisibility(View.GONE);
 
+        this.loadBtn = (ImageButton) rootView.findViewById(R.id.loadBtn);
 
-        if (this.gridView != null) {
-            this.isTable = true;
-        } else {
-            this.isTable = false;
-        }
 
         this.workAdapter = new WorkAdapter(itemListDTO.getAddList());
         this.gridView.setAdapter(this.workAdapter);
@@ -453,10 +545,137 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.unWorkAdapter = new UnWorkAdapter(itemListDTO.getUnAddList());
         this.unGridView.setAdapter(this.unWorkAdapter);
 
+        this.loadUnSpeakOutBillBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadUnSpeakOutBillBtn.setVisibility(View.GONE);
+                load();
+            }
+        });
+
+
+        /**
+         * 重新查詢
+         */
+        this.loadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadBtn.setVisibility(View.GONE);
+                LoadNoSpeakOutBillTask loadNoSpeakOutBillTask = new LoadNoSpeakOutBillTask();
+                loadNoSpeakOutBillTask.setRestAsyTaskListener(new GenericuRestTask.RestAsyTaskListener<JsonBill>() {
+                    @Override
+                    public void message(RestResultException e, JsonBill content) {
+                        loadBtn.setVisibility(View.VISIBLE);
+                        //
+                        itemListDTO.getUnAddList().clear();
+                        itemListDTO.getUnAddList().addAll(content.getContent());
+                        unWorkAdapter.notifyDataSetChanged();
+                    }
+                });
+                loadNoSpeakOutBillTask.execute();
+            }
+        });
+
+        itemListDTO.getAddList().clear();
+        itemListDTO.getAddList().addAll(toFoodService.queryNowWorkList(itemListDTO, getActivity()));
+
+
+        workAdapter.notifyDataSetChanged();
+        this.setShowMeaage();
 
         return rootView;
     }
 
+    private void setShowMeaage() {
+
+
+
+        final List<FoddNo> foddNos = new ArrayList<>();
+        StringBuffer buffer = new StringBuffer();
+        for (BillSon son : itemListDTO.getAddList()) {
+            for (Meal meal : son.getMeals()) {
+
+                if (!StringUtils.equals(meal.getUseNumber(), meal.getNumber())) {
+
+                    String food = meal.getName();
+                    if (StringUtils.isNotBlank(meal.getSpcialize())) {
+                        food += "[" + meal.getSpcialize() + "]";
+                    }
+
+                    final FoddNo foodNo = new FoddNo();
+                    foodNo.setFood(food);
+
+                    int noToFoodNum = Integer.parseInt(meal.getNumber()) - Integer.parseInt(meal.getUseNumber());
+                    if (foddNos.contains(foodNo)) {
+                        int indexFoodNo =
+                                foddNos.indexOf(foddNos);
+
+                        final FoddNo nowFood = foddNos.get(indexFoodNo);
+
+                        nowFood.setNo(nowFood.getNo() + noToFoodNum);
+                    } else {
+                        foodNo.setNo(noToFoodNum);
+                        foodNo.setFood(food);
+                        foddNos.add(foodNo);
+                    }
+
+
+                }
+            }
+            Collections.sort(foddNos);
+        }
+
+        StringBuffer showMessageBur = new StringBuffer();
+        for (FoddNo foddNo:foddNos) {
+            showMessageBur.append("[" + foddNo.getNo() + "]" + foddNo.food + "\n");
+
+        }
+        showMeaage.setText(showMessageBur.toString());
+
+
+    }
+
+    private class FoddNo implements Comparable<FoddNo> {
+        private String food;
+        private int no;
+
+        public String getFood() {
+            return food;
+        }
+
+        public void setFood(String food) {
+            this.food = food;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            FoddNo ob = (FoddNo) o;
+            if (this.food.equals(ob.getFood())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public void setNo(int no) {
+            this.no = no;
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
+        }
+
+        public int getNo() {
+            return no;
+        }
+
+        @Override
+        public int compareTo(FoddNo foddNo) {
+            return foddNo.getFood().compareTo(this.getFood());
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {

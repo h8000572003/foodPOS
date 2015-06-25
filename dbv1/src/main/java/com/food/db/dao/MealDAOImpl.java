@@ -26,7 +26,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
                 meal.setTxId(cursor.getString(1));
                 meal.setName(cursor.getString(2));
                 meal.setSpcialize(cursor.getString(3));
-                meal.setDolloar(cursor.getString(4));
+                meal.setDollar(cursor.getString(4));
                 meal.setNumber(cursor.getString(5));
                 meal.setUseNumber(cursor.getString(6));
                 return meal;
@@ -43,7 +43,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
             values.put("txId", domainType.getTxId());
             values.put("name", domainType.getName());
             values.put("spcialize", domainType.getSpcialize());
-            values.put("dolloar", domainType.getDolloar());
+            values.put("dolloar", domainType.getDollar());
             values.put("number", domainType.getNumber());
             values.put("useNumber", domainType.getUseNumber());
             return values;
@@ -62,7 +62,7 @@ public class MealDAOImpl extends AbstractDAO<Meal> {
 
     @Override
     protected String[] getAllColumns() {
-        return new String[]{"id", "txId", "name", "spcialize", "dolloar", "number", "useNumber"};
+        return new String[]{"id", "txId", "name", "spcialize", "dollar", "number", "useNumber"};
     }
 
     @Override

@@ -29,6 +29,7 @@ public class DBMinLocationImpl implements DBMain {
 
     }
 
+
     @Override
     public void insert(List<DomainType> types) {
         for (DomainType type : types) {

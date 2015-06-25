@@ -7,12 +7,9 @@ import android.util.Log;
 import com.food.db.domainType.Column;
 import com.food.db.domainType.DomainType;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by 1109001 on 2015/6/4.
@@ -49,6 +46,7 @@ public class CommonUtil {
                     if (fs[j].isAnnotationPresent(Column.class)) {
                         final Column column = fs[j].getAnnotation(Column.class);
                         Object value = null;
+                        Log.d(TAG, "---" + column.column());
                         if (column.isNum()) {
                             value = cursor.getLong(cursor.getColumnIndex(column.column()));
                         } else {

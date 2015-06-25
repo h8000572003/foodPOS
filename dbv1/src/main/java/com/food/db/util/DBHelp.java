@@ -3,7 +3,6 @@ package com.food.db.util;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.food.db.R;
 
@@ -17,7 +16,7 @@ public class DBHelp extends SQLiteOpenHelper {
     private Context context;
 
     public DBHelp(Context context) {
-        super(context, "db", null, 1);
+        super(context, "db", null, 2);
         this.context = context;
     }
 
@@ -28,20 +27,22 @@ public class DBHelp extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.create_food_sql));
         db.execSQL(context.getString(R.string.create_meal_sql));
         db.execSQL(context.getString(R.string.create_state_sql));
-        this.insertDefault(db);
+
     }
 
     private void insertDefault(SQLiteDatabase db) {
 
-        for (String sql : context.getResources().getStringArray(R.array.inti_sql)) {
-            Log.i(TAG, sql);
-            db.execSQL(sql);
-        }
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+
+        db.execSQL("DROP TABLE IF EXISTS bill;");
+        db.execSQL("DROP TABLE IF EXISTS meal;");
+        db.execSQL("DROP TABLE IF EXISTS food;");
+        db.execSQL("DROP TABLE IF EXISTS state;");
 
         onCreate(db);
     }

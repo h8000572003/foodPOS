@@ -10,6 +10,9 @@ public class Bill implements DomainType {
     @Column(name = "txId", isPk = false, column = "txId", isNum = false)
     private String txId;
 
+    @Column(name = "useNo", isPk = false, column = "useNo", isNum = false)
+    private String useNo="";
+
     @Column(name = "建立日期", isPk = false, column = "orderDate", isNum = false)
     private String orderDate;//  建立日期
 
@@ -118,5 +121,13 @@ public class Bill implements DomainType {
 
     public void setIsSpeakOut(String isSpeakOut) {
         this.isSpeakOut = isSpeakOut;
+    }
+
+    public String getUseNo() {
+        return useNo;
+    }
+
+    public void setUseNo(String useNo) {
+        this.useNo = useNo;
     }
 }

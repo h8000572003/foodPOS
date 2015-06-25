@@ -8,6 +8,8 @@ import android.widget.Toast;
 import com.food.foodpos.util.gcm.Contract;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,13 +31,21 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
 
-        String regId = "";
-        ;
+
+        String regId = Util.getGCMID(context);
+
+        if (StringUtils.isNotBlank(regId)) {
+            return regId;
+        }
+
         try {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
+
             regId = gcm.register(SENDER_ID);
+            Util.putGCMID(regId, context);
+
             RestUtils.getStringFromUrl("/gcm/insert?id=" + regId);
         } catch (Exception e) {
             Log.e("E:", e.getMessage());

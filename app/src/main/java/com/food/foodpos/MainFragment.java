@@ -19,6 +19,7 @@ public class MainFragment extends Fragment {
     private Button toBtn = null;
     private Button viewBtn;
 
+
     private GcmRegistrationAsyncTask gcmRegistrationAsyncTask;
 
     @Override

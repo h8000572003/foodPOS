@@ -1,8 +1,11 @@
 package com.food.foodpos;
 
+
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ import com.food.foodpos.util.AeUtils;
 import com.food.foodpos.util.Feature;
 import com.food.foodpos.util.Food;
 import com.food.foodpos.util.FoodUploadAsyTask;
+import com.food.foodpos.util.Util;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 import com.food.foodpos.util.gcm.RestResultException;
 
@@ -56,10 +62,15 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
     @Override
     public void message(RestResultException e, BaseRestObj content) {
         Log.i(TAG, "insert...");
+
     }
 
 
     private class ViewHold {
+        private RadioGroup outOrInRadioGroup;
+        private RadioButton inRadioBtn;
+        private RadioButton outRadioBtn;
+
         private GridView foodGridView;
         private GridView featureGridView;
         private ListView orderList;
@@ -391,52 +402,126 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
         @Override
         public void onClick(View view) {
 
-            FoodUploadAsyTask foodUploadAsyTask = new FoodUploadAsyTask();
 
+            switch (viewHold.outOrInRadioGroup.getCheckedRadioButtonId()) {
+                case R.id.inRadioBtn:
+                    orderDTO.setOutOrIn("I");
+                    break;
 
-            Bill bill = new Bill();
-
-            bill.setFeature("");
-            bill.setIsMealOut("O");
-            bill.setIsMealOut("N");
-            bill.setIsPaid("Y");
-            bill.setSeat("1");
-            bill.setTxId(AeUtils.getNowDate() + AeUtils.getNowTime());
-            bill.setOrderDate(AeUtils.getNowDate());
-            bill.setOrderTime(AeUtils.getNowTime());
-            bill.setIsSpeakOut("N");
-            bill.setIsMealOut("N");
-            bill.setOutOrIn("O");
-
-            List<Meal> meals = new ArrayList<>();
-
-            int total = 0;
-            for (OrderAddItem item : orderDTO.getItems()) {
-                final Meal meal = new Meal();
-                meal.setTxId(bill.getTxId());
-                meal.setDolloar(item.getDollar() + "");
-                meal.setName(item.getName());
-                meal.setSpcialize(item.getFeature());
-                meal.setNumber(item.getNo());
-                meal.setUseNumber("0");
-
-
-                meals.add(meal);
-
-                total += Integer.parseInt(item.getNo()) * item.getDollar();
-
+                case R.id.orderBtn:
+                    orderDTO.setOutOrIn("O");
+                    break;
+                default:
+                    orderDTO.setOutOrIn(StringUtils.EMPTY);
+                    break;
             }
-            bill.setDollar(total + "");
 
-            BillSon son = new BillSon();
-            son.setBill(bill);
-            son.setMeals(meals);
+            if (orderDTO.getItems().isEmpty()) {
+                Toast.makeText(getActivity(), "至少選一道菜", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (StringUtils.isBlank(orderDTO.getOutOrIn())) {
+                Toast.makeText(getActivity(), "請選擇「內用」還是「外帶」", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            orderDTO.setUseNo(Util.getSeq(getActivity()));
+            orderDTO.setNowDate(AeUtils.getNowDate());
+            orderDTO.setNowTime(AeUtils.getNowTime());
+            orderDTO.setTxId(orderDTO.getNowDate() + orderDTO.getNowTime());
 
-            foodUploadAsyTask.setSon(son);
-            foodUploadAsyTask.setRestAsyTaskListener(OrderFragment.this);
-            foodUploadAsyTask.execute();
+
+            final StringBuffer buffer = new StringBuffer();
+            int totoal = 0;
+            buffer.append("序號：" + orderDTO.getUseNo() + "\n");
+            for (OrderAddItem item : orderDTO.getItems()) {
+                buffer.append("[" + item.getNo() + "]");
+                buffer.append(item.getName() + "\n");
+                totoal += Integer.parseInt(item.getNo()) * item.getDollar();
+            }
+            buffer.append("===");
+            buffer.append("總金額:$" + totoal);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("買單").setMessage(buffer.toString());
+            builder.setPositiveButton("買單", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    FoodUploadAsyTask foodUploadAsyTask = new FoodUploadAsyTask();
+
+
+                    Bill bill = new Bill();
+
+                    bill.setFeature(StringUtils.EMPTY);
+                    bill.setIsMealOut("N");
+                    bill.setIsMealOut("N");
+                    bill.setIsPaid("Y");
+                    bill.setSeat("1");
+                    bill.setTxId(orderDTO.getTxId());
+                    bill.setUseNo(orderDTO.getUseNo());
+                    bill.setOrderDate(orderDTO.getNowDate());
+                    bill.setOrderTime(orderDTO.getNowTime());
+                    bill.setIsSpeakOut("N");
+                    bill.setIsMealOut("N");
+                    bill.setOutOrIn(orderDTO.getOutOrIn());
+
+                    List<Meal> meals = new ArrayList<>();
+
+                    int total = 0;
+                    for (OrderAddItem item : orderDTO.getItems()) {
+                        final Meal meal = new Meal();
+                        meal.setTxId(bill.getTxId());
+                        meal.setDollar(item.getDollar() + "");
+                        meal.setName(item.getName());
+                        meal.setSpcialize(item.getFeature());
+                        meal.setNumber(item.getNo());
+                        meal.setUseNumber("0");
+                        meals.add(meal);
+                        total += Integer.parseInt(item.getNo()) * item.getDollar();
+
+                    }
+                    bill.setDollar(total + "");
+
+                    BillSon son = new BillSon();
+                    son.setBill(bill);
+                    son.setMeals(meals);
+
+                    foodUploadAsyTask.setSon(son);
+                    foodUploadAsyTask.setRestAsyTaskListener(OrderFragment.this);
+                    foodUploadAsyTask.execute();
+                    cleanAllView();
+
+
+                    Toast.makeText(getActivity(), "菜單送出", Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
+            builder.setNegativeButton("發現有錯，調整一下", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            builder.create().show();
+
 
         }
+    }
+
+    private void cleanAllView() {
+
+        orderDTO.getItems().clear();
+
+        foodAdapter.onClick();
+        orderAdapter.onClick();
+        featureAdapter.onClick();
+
+
+        featureAdapter.notifyDataSetChanged();
+        viewHold.featureEdit.setText(StringUtils.EMPTY);
+        viewHold.noEdit.setText(StringUtils.EMPTY);
+        viewHold.foodEdit.setText(StringUtils.EMPTY);
+        viewHold.outOrInRadioGroup.clearCheck();
     }
 
     private class MyAdd implements View.OnClickListener {
@@ -469,7 +554,6 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
                     if (StringUtils.equals(orderAddItem.getName(), item.getName()) && StringUtils.equals(orderAddItem.getFeature(), item.getFeature())) {
                         hasTheSameFood = true;
 
-
                         orderAddItem.setNo(Integer.parseInt(orderAddItem.getNo()) + Integer.parseInt(item.getNo()) + "");
                     }
                 }
@@ -496,6 +580,10 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_order_layout, container, false);
+
+        this.viewHold.outOrInRadioGroup = (RadioGroup) rootView.findViewById(R.id.outOrInRadioGroup);
+        this.viewHold.inRadioBtn = (RadioButton) rootView.findViewById(R.id.inRadioBtn);
+        this.viewHold.outRadioBtn = (RadioButton) rootView.findViewById(R.id.outRadioBtn);
 
         this.viewHold.foodGridView = (GridView) rootView.findViewById(R.id.foodGridView);
         this.viewHold.featureGridView = (GridView) rootView.findViewById(R.id.featureGridView);

@@ -4,7 +4,7 @@ package com.food.db.domainType;
  * 餐點
  * Created by 1109001 on 2015/6/2.
  */
-@Table(table = "Bill", name = "帳單", keyName = "id")
+@Table(table = "Meal", name = "餐點", keyName = "id")
 public class Meal implements DomainType {
 
     @Column(name = "id", isPk = false, column = "id", isNum = true)
@@ -19,8 +19,8 @@ public class Meal implements DomainType {
     @Column(name = "特別", isPk = false, column = "spcialize", isNum = false)
     private String spcialize;//特別
 
-    @Column(name = "單筆金額", isPk = false, column = "dolloar", isNum = false)
-    private String dolloar; //單筆金額
+    @Column(name = "單筆金額", isPk = false, column = "dollar", isNum = false)
+    private String dollar; //單筆金額
 
     @Column(name = "數量", isPk = false, column = "number", isNum = false)
     private String number;//數量
@@ -61,14 +61,6 @@ public class Meal implements DomainType {
         this.spcialize = spcialize;
     }
 
-    public String getDolloar() {
-        return dolloar;
-    }
-
-    public void setDolloar(String dolloar) {
-        this.dolloar = dolloar;
-    }
-
     public String getNumber() {
         return number;
     }
@@ -77,6 +69,14 @@ public class Meal implements DomainType {
         this.number = number;
     }
 
+
+    public String getDollar() {
+        return dollar;
+    }
+
+    public void setDollar(String dollar) {
+        this.dollar = dollar;
+    }
 
     public String getUseNumber() {
         return useNumber;
@@ -93,8 +93,9 @@ public class Meal implements DomainType {
                 ", txId='" + txId + '\'' +
                 ", name='" + name + '\'' +
                 ", spcialize='" + spcialize + '\'' +
-                ", dolloar='" + dolloar + '\'' +
+                ", dollar='" + dollar + '\'' +
                 ", number='" + number + '\'' +
+                ", useNumber='" + useNumber + '\'' +
                 '}';
     }
 }

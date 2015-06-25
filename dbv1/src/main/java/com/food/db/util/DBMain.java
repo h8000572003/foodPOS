@@ -2,8 +2,6 @@ package com.food.db.util;
 
 import com.food.db.domainType.DomainType;
 
-
-import java.io.Closeable;
 import java.util.List;
 
 /**
@@ -12,6 +10,8 @@ import java.util.List;
 public interface DBMain {
 
     void insert(DomainType type);
+
+
 
     void insert(List<DomainType> types);
 

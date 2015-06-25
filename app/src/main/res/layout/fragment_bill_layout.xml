@@ -2,16 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
         android:orientation="vertical">
 
+
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/showMeaage"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:text="進行中清單"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+        <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -19,24 +30,35 @@
             android:gravity="center"
             android:text="進行中清單"
 
-
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
-        <GridView
-            android:id="@+id/gridView"
+
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:numColumns="1" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+
+            <ListView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3" />
+
+        </FrameLayout>
+
+
     </LinearLayout>
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/textView"
@@ -50,11 +72,39 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
-        <GridView
-            android:id="@+id/unGridView"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="1" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/unGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:numColumns="1" />
+
+            <Button
+                android:id="@+id/loadUnSpeakOutBillBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:text="有新單點我新增"
+                android:textColor="#ff0415"
+                android:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/loadBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:src="@android:drawable/ic_input_add" />
+
+        </FrameLayout>
+
+
     </LinearLayout>
 
 
