@@ -136,15 +136,6 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
     }
 
-    private void load() {
-        if (this.billRestAsyTask == null) {
-            this.billRestAsyTask = new BillAsyTask();
-        }
-
-        this.billRestAsyTask.setRestAsyTaskListener(this);
-        this.billRestAsyTask.execute();
-    }
-
 
     private class UnWorkAdapter extends BaseAdapter {
 
@@ -200,7 +191,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                         notifyDataSetChanged();
                         workAdapter.notifyDataSetChanged();
                         setShowMeaage();
-                        new UpdateIsSpeakOutAsyTask(son.getBill().getTxId(), "Y").execute();
+                        new UpdateIsSpeakOutAsyTask(son.getBill().getTxId(), "Y", getActivity()).execute();
                     }
                 });
 
@@ -443,7 +434,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             son.getBill().setIsPaid("Y");
-                            new Update2PayAsyTask(son.getBill().getTxId()).execute();
+                            new Update2PayAsyTask(son.getBill().getTxId(), getActivity()).execute();
                             notifyDataSetChanged();
                         }
                     });
@@ -517,9 +508,13 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public void broadcastReceived(Intent intent) {
         Bundle extras = intent.getExtras();
         String mes = extras.getString("message");
-        Toast.makeText(getActivity(), mes, Toast.LENGTH_SHORT).show();
 
-        this.loadUnSpeakOutBillBtn.setVisibility(View.VISIBLE);
+        Log.d(TAG, "GET GOOGLE MESSAGe=" + mes);
+
+        if (StringUtils.equals(mes, "A001")) {
+            this.loadUnSpeakOutBillBtn.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
@@ -535,7 +530,6 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.loadUnSpeakOutBillBtn = (TextView) rootView.findViewById(R.id.loadUnSpeakOutBillBtn);
         this.showMeaage = (TextView) rootView.findViewById(R.id.showMeaage);
         this.loadUnSpeakOutBillBtn.setVisibility(View.GONE);
-
         this.loadBtn = (ImageButton) rootView.findViewById(R.id.loadBtn);
 
 
@@ -545,11 +539,25 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         this.unWorkAdapter = new UnWorkAdapter(itemListDTO.getUnAddList());
         this.unGridView.setAdapter(this.unWorkAdapter);
 
+        /**
+         *
+         */
         this.loadUnSpeakOutBillBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadUnSpeakOutBillBtn.setVisibility(View.GONE);
-                load();
+                LoadNoSpeakOutBillTask loadNoSpeakOutBillTask = new LoadNoSpeakOutBillTask(getActivity());
+                loadNoSpeakOutBillTask.setRestAsyTaskListener(new GenericuRestTask.RestAsyTaskListener<JsonBill>() {
+                    @Override
+                    public void message(RestResultException e, JsonBill content) {
+                        loadBtn.setVisibility(View.VISIBLE);
+                        //
+                        itemListDTO.getUnAddList().clear();
+                        itemListDTO.getUnAddList().addAll(content.getContent());
+                        unWorkAdapter.notifyDataSetChanged();
+                    }
+                });
+                loadNoSpeakOutBillTask.execute();
             }
         });
 
@@ -561,7 +569,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             @Override
             public void onClick(View view) {
                 loadBtn.setVisibility(View.GONE);
-                LoadNoSpeakOutBillTask loadNoSpeakOutBillTask = new LoadNoSpeakOutBillTask();
+                LoadNoSpeakOutBillTask loadNoSpeakOutBillTask = new LoadNoSpeakOutBillTask(getActivity());
                 loadNoSpeakOutBillTask.setRestAsyTaskListener(new GenericuRestTask.RestAsyTaskListener<JsonBill>() {
                     @Override
                     public void message(RestResultException e, JsonBill content) {
@@ -589,7 +597,6 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     private void setShowMeaage() {
 
 
-
         final List<FoddNo> foddNos = new ArrayList<>();
         StringBuffer buffer = new StringBuffer();
         for (BillSon son : itemListDTO.getAddList()) {
@@ -601,7 +608,6 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                     if (StringUtils.isNotBlank(meal.getSpcialize())) {
                         food += "[" + meal.getSpcialize() + "]";
                     }
-
                     final FoddNo foodNo = new FoddNo();
                     foodNo.setFood(food);
 
@@ -609,9 +615,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                     if (foddNos.contains(foodNo)) {
                         int indexFoodNo =
                                 foddNos.indexOf(foddNos);
-
                         final FoddNo nowFood = foddNos.get(indexFoodNo);
-
                         nowFood.setNo(nowFood.getNo() + noToFoodNum);
                     } else {
                         foodNo.setNo(noToFoodNum);
@@ -626,7 +630,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         }
 
         StringBuffer showMessageBur = new StringBuffer();
-        for (FoddNo foddNo:foddNos) {
+        for (FoddNo foddNo : foddNos) {
             showMessageBur.append("[" + foddNo.getNo() + "]" + foddNo.food + "\n");
 
         }

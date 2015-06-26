@@ -28,6 +28,20 @@ public class Util {
 
     }
 
+    public static String getIp(Context context) {
+        final SharedPreferences sharedPreferences =
+                context.getSharedPreferences(FILE_KEY, Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString("ip", "0.0.0.0");
+    }
+
+    public static void setIp(String ip, Context context) {
+        final SharedPreferences sharedPreferences =
+                context.getSharedPreferences(FILE_KEY, Context.MODE_PRIVATE);
+
+        sharedPreferences.edit().putString("ip", ip).commit();
+    }
+
     public static void putGCMID(String gcm, Context context) {
 
         final SharedPreferences sharedPreferences =

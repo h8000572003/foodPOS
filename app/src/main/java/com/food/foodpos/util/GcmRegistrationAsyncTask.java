@@ -34,24 +34,22 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
 
         String regId = Util.getGCMID(context);
 
-        if (StringUtils.isNotBlank(regId)) {
-            return regId;
-        }
 
         try {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
 
-            regId = gcm.register(SENDER_ID);
+            if (StringUtils.isBlank(regId)) {
+                regId = gcm.register(SENDER_ID);
+            }
+
             Util.putGCMID(regId, context);
 
-            RestUtils.getStringFromUrl("/gcm/insert?id=" + regId);
+            return RestUtils.getStringFromUrl("/gcm/insert?id=" + regId, context);
         } catch (Exception e) {
             Log.e("E:", e.getMessage());
-        } finally {
-            return regId;
-
+            return "";
         }
 
 

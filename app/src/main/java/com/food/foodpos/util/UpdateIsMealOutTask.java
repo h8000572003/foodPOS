@@ -1,5 +1,7 @@
 package com.food.foodpos.util;
 
+import android.content.Context;
+
 import com.food.foodpos.dto.BaseRestObj;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 
@@ -9,7 +11,8 @@ import com.food.foodpos.util.gcm.GenericuRestTask;
 public class UpdateIsMealOutTask extends GenericuRestTask<BaseRestObj> {
 
 
-    public UpdateIsMealOutTask(String txid, String value) {
+    public UpdateIsMealOutTask(String txid, String value, Context context) {
+        super(context);
         setUrl("/bill/update/" + txid + "/isMealOut?value=" + value);
     }
 

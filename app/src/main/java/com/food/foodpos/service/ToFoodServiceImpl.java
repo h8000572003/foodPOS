@@ -95,7 +95,7 @@ public class ToFoodServiceImpl implements ToFoodService {
         try {
             dbMain.beginTransaction();
             modfiyMealUseNo(dbMain, dto.getNowMeal());
-            modfiyBillForTotal(dbMain, dto, dto.getNowSelectBill());
+            modfiyBillForTotal(dbMain, dto, dto.getNowSelectBill(),context);
 
 
             dbMain.setTransactionSuccessful();
@@ -155,7 +155,7 @@ public class ToFoodServiceImpl implements ToFoodService {
             if (this.isBillMealOut(dto.getNowSelectBill().getMeals())) {//都出菜完
                 dto.getNowSelectBill().getBill().setIsMealOut("Y");
                 dbMain.modfiy(dto.getNowSelectBill().getBill());
-                new UpdateIsMealOutTask(dto.getNowSelectBill().getBill().getTxId(), "Y").execute();//出菜狀況改完，Y
+                new UpdateIsMealOutTask(dto.getNowSelectBill().getBill().getTxId(), "Y",context).execute();//出菜狀況改完，Y
             }
 
 
@@ -173,7 +173,7 @@ public class ToFoodServiceImpl implements ToFoodService {
     }
 
 
-    private void modfiyBillForTotal(DBMain dbMain, ItemListDTO dto, BillSon son) {
+    private void modfiyBillForTotal(DBMain dbMain, ItemListDTO dto, BillSon son,Context context) {
 
 
         final Bill bill = son.getBill();
@@ -182,7 +182,7 @@ public class ToFoodServiceImpl implements ToFoodService {
 
             bill.setIsMealOut("Y");
             dbMain.modfiy(bill);
-            new UpdateIsMealOutTask(son.getBill().getTxId(), "Y").execute();//出菜狀況改完，Y
+            new UpdateIsMealOutTask(son.getBill().getTxId(), "Y",context).execute();//出菜狀況改完，Y
 
 
         }

@@ -1,5 +1,7 @@
 package com.food.foodpos.util.gcm;
 
+import android.content.Context;
+
 import com.food.foodpos.dto.RestObj;
 import com.food.foodpos.util.RestUtils;
 
@@ -15,11 +17,13 @@ public abstract class GenericuPostRestTask<T extends RestObj> extends GenericuRe
 
     @Override
     protected String doInBackground(Void... params) {
-        return RestUtils.getStringFromUrl(url, pairs);
+
+        return RestUtils.getStringFromUrl(url, pairs,context);
     }
 
 
-    public GenericuPostRestTask(String url) {
+    public GenericuPostRestTask(String url, Context context) {
+        super(context);
         this.url = url;
 
 

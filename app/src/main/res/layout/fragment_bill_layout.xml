@@ -12,16 +12,6 @@
 
 
         <TextView
-            android:id="@+id/showMeaage"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:text="進行中清單"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white" />
-
-        <TextView
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,9 +20,9 @@
             android:gravity="center"
             android:text="進行中清單"
 
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white" />
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
 
 
         <FrameLayout
@@ -52,6 +42,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent" android:background="#9367693f"></View>
+
 
     <LinearLayout
         android:layout_width="0dp"
@@ -61,7 +55,31 @@
 
 
         <TextView
-            android:id="@+id/textView"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:text="尚未出菜總數量"
+
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+
+        <TextView
+            android:id="@+id/showMeaage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+
+            android:text="進行中清單"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
+
+
+        <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -69,7 +87,7 @@
             android:gravity="center"
             android:text="尚未加入清單"
 
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
 
 

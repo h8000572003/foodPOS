@@ -446,7 +446,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
-                    FoodUploadAsyTask foodUploadAsyTask = new FoodUploadAsyTask();
+                    FoodUploadAsyTask foodUploadAsyTask = new FoodUploadAsyTask(getActivity());
 
 
                     Bill bill = new Bill();

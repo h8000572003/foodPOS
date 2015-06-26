@@ -1,7 +1,8 @@
 package com.food.foodpos.util;
 
+import android.content.Context;
+
 import com.food.foodpos.dto.BaseRestObj;
-import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.util.gcm.GenericuRestTask;
 
 /**
@@ -10,7 +11,8 @@ import com.food.foodpos.util.gcm.GenericuRestTask;
 public class Update2PayAsyTask extends GenericuRestTask<BaseRestObj> {
 
 
-    public Update2PayAsyTask(String txId) {
+    public Update2PayAsyTask(String txId,Context context) {
+        super(context);
         final String url = "/bill/update/" + txId + "/isPay";
         this.setUrl(url);
     }

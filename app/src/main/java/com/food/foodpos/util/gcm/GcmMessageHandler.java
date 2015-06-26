@@ -1,11 +1,11 @@
 package com.food.foodpos.util.gcm;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 /**
  * Created by Andy on 2015/6/12.
@@ -44,7 +44,7 @@ public class GcmMessageHandler extends IntentService {
     public void showToast(){
         handler.post(new Runnable() {
             public void run() {
-                Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
             }
         });
 

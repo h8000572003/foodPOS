@@ -1,5 +1,8 @@
 package com.food.foodpos.util;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.food.db.domainType.Bill;
 import com.food.foodpos.util.gcm.Contract;
 import com.food.foodpos.util.gcm.MyNameValuePair;
@@ -12,6 +15,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -27,13 +33,21 @@ public class RestUtils {
 
     private static final String UN_BUY_BILL = "/bill/query/unBuy";
 
-    public static String getStringFromUrl(String sonUrl) {
-        DefaultHttpClient demo = new DefaultHttpClient();
+    public static String getStringFromUrl(String sonUrl, Context context) {
+
+
+        final HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+
+        DefaultHttpClient demo = new DefaultHttpClient(httpParams);
         demo.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 
-        HttpGet httpGet = new HttpGet(Contract.REST_ROOT_URL + sonUrl);
+        final String url = String.format(Contract.REST_PATH, Util.getIp(context)) + sonUrl;
 
+        HttpGet httpGet = new HttpGet(url);
+        Log.d(TAG, "url=" + url);
         try {
+
             HttpResponse response = demo.execute(httpGet);
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
@@ -42,24 +56,27 @@ public class RestUtils {
         }
     }
 
-    public static String getStringFromUrl(String sonUrl, List<MyNameValuePair> myNameValuePairList) {
+    public static String getStringFromUrl(String sonUrl, List<MyNameValuePair> myNameValuePairList, Context context) {
 
-        DefaultHttpClient demo = new DefaultHttpClient();
+        final HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+
+        DefaultHttpClient demo = new DefaultHttpClient(httpParams);
         demo.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 
+        final String url = String.format(Contract.REST_PATH, Util.getIp(context)) + sonUrl;
 
-        HttpPost httpPost = new HttpPost(Contract.REST_ROOT_URL + sonUrl);
+        HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> pairs = new ArrayList<>();
         for (MyNameValuePair valuePair : myNameValuePairList) {
             pairs.add(new BasicNameValuePair(valuePair.getName(), valuePair.getValue()));
         }
 
 
-
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(pairs, HTTP.UTF_8));
             HttpResponse response = demo.execute(httpPost);
-            return EntityUtils.toString(response.getEntity(),"utf-8");
+            return EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -69,11 +86,6 @@ public class RestUtils {
     }
 
 
-    public static List<Bill> getUnBuyBillsList() {
-
-        return new Gson().fromJson(getStringFromUrl(UN_BUY_BILL), Bills.class).getBills();
-
-    }
 
     private class Bills {
         private List<Bill> bills;

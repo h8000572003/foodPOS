@@ -7,8 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.food.foodpos.util.GcmRegistrationAsyncTask;
+import com.food.foodpos.util.Util;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Andy on 2015/6/18.
@@ -18,6 +25,10 @@ public class MainFragment extends Fragment {
     private Button orderBtn = null;
     private Button toBtn = null;
     private Button viewBtn;
+    private Button restBtn = null;
+    private EditText ipEdit;
+    private TextView message;
+    private ProgressBar progressBar;
 
 
     private GcmRegistrationAsyncTask gcmRegistrationAsyncTask;
@@ -30,6 +41,11 @@ public class MainFragment extends Fragment {
                 (Button) rootView.findViewById(R.id.orderBtn);
         this.toBtn = (Button) rootView.findViewById(R.id.toBtn);
         this.viewBtn = (Button) rootView.findViewById(R.id.viewBtn);
+        this.restBtn = (Button) rootView.findViewById(R.id.restBtn);
+        this.ipEdit = (EditText) rootView.findViewById(R.id.ipEdit);
+        this.message = (TextView) rootView.findViewById(R.id.message);
+        this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
 
         this.orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,13 +71,90 @@ public class MainFragment extends Fragment {
             }
         });
 
+        this.setHide();
+        this.restBtn.setVisibility(View.GONE);
 
-        gcmRegistrationAsyncTask = new GcmRegistrationAsyncTask(getActivity());
-        gcmRegistrationAsyncTask.execute();
 
+        this.ipEdit.setText(Util.getIp(getActivity()));
+
+        if (this.gcmRegistrationAsyncTask == null) {
+            this.gcmRegistrationAsyncTask = getTask();
+            this.gcmRegistrationAsyncTask.execute();
+
+
+        }
+        this.restBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String ip = ipEdit.getText().toString();
+                if (ip.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
+                    Util.setIp(ipEdit.getText().toString(), getActivity());
+                    gcmRegistrationAsyncTask = getTask();
+                    gcmRegistrationAsyncTask.execute();
+
+                } else {
+                    Toast.makeText(getActivity(), "請輸入ip格式", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
 
 
         return rootView;
+    }
+
+    private GcmRegistrationAsyncTask getTask() {
+        final GcmRegistrationAsyncTask task =
+                new GcmRegistrationAsyncTask(getActivity()) {
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        message.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        ipEdit.setEnabled(false);
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(String msg) {
+                        if (msg.equals(StringUtils.EMPTY)) {
+                            message.setText("連不到伺服器");
+                            message.setVisibility(View.VISIBLE);
+
+                            ipEdit.setEnabled(true);
+                            MainFragment.this.setHide();
+                            MainFragment.this.setShow();
+                        } else {
+                            restBtn.setVisibility(View.GONE);
+                            message.setVisibility(View.GONE);
+                            ipEdit.setEnabled(false);
+
+                            toBtn.setVisibility(View.VISIBLE);
+                            viewBtn.setVisibility(View.VISIBLE);
+                            orderBtn.setVisibility(View.VISIBLE);
+
+
+                        }
+                        progressBar.setVisibility(View.GONE);
+
+
+                    }
+                };
+        return task;
+    }
+
+    private void setHide() {
+        this.toBtn.setVisibility(View.GONE);
+        this.viewBtn.setVisibility(View.GONE);
+        this.orderBtn.setVisibility(View.GONE);
+    }
+
+    private void setShow() {
+        this.restBtn.setVisibility(View.VISIBLE);
+
     }
 
 }
