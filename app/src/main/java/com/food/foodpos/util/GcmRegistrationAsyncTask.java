@@ -32,7 +32,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
 
 
-        String regId = Util.getGCMID(context);
+        String regId = StringUtils.EMPTY;
 
 
         try {
@@ -40,9 +40,10 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
 
-            if (StringUtils.isBlank(regId)) {
-                regId = gcm.register(SENDER_ID);
-            }
+            gcm.unregister();
+
+            regId = gcm.register(SENDER_ID);
+
 
             Util.putGCMID(regId, context);
 

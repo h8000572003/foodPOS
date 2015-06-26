@@ -118,12 +118,9 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
     public void message(RestResultException e, JsonBill content) {
         this.loadUnSpeakOutBillBtn.setVisibility(View.GONE);
         if (e == null) {
-
-
             itemListDTO.getUnAddList().clear();
             itemListDTO.getUnAddList().addAll(content.getContent());
             setShowMeaage();
-
         } else {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "loadinng fail e:", e);
@@ -131,14 +128,11 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
 
         this.billRestAsyTask = null;
-
         this.unWorkAdapter.notifyDataSetChanged();
-
     }
 
 
     private class UnWorkAdapter extends BaseAdapter {
-
         private List<BillSon> unAddList;
         private LayoutInflater mChildInflater;
 
