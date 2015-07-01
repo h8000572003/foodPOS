@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.food.db.domainType.Bill;
 import com.food.db.domainType.Meal;
 import com.food.foodpos.dto.BaseRestObj;
-import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBillMeals;
 import com.food.foodpos.dto.OrderAddItem;
 import com.food.foodpos.dto.OrderDTO;
 import com.food.foodpos.util.AeUtils;
@@ -97,7 +97,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
     }
 
     protected interface OnSetInitLinster {
-        void onClick();
+        void onClose();
     }
 
     private class OrderAdapter extends BaseAdapter implements OnSetInitLinster {
@@ -180,7 +180,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
         }
 
         @Override
-        public void onClick() {
+        public void onClose() {
             items.clear();
             notifyDataSetChanged();
         }
@@ -266,7 +266,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
         }
 
         @Override
-        public void onClick() {
+        public void onClose() {
             locations.clear();
             notifyDataSetChanged();
         }
@@ -364,7 +364,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
         }
 
         @Override
-        public void onClick() {
+        public void onClose() {
             locations.clear();
             notifyDataSetChanged();
         }
@@ -481,7 +481,7 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
                     }
                     bill.setDollar(total + "");
 
-                    BillSon son = new BillSon();
+                    JsonBillMeals son = new JsonBillMeals();
                     son.setBill(bill);
                     son.setMeals(meals);
 
@@ -512,9 +512,9 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
 
         orderDTO.getItems().clear();
 
-        foodAdapter.onClick();
-        orderAdapter.onClick();
-        featureAdapter.onClick();
+        foodAdapter.onClose();
+        orderAdapter.onClose();
+        featureAdapter.onClose();
 
 
         featureAdapter.notifyDataSetChanged();
@@ -569,8 +569,8 @@ public class OrderFragment extends Fragment implements GenericuRestTask.RestAsyT
                 feathureEdit.setText("");
 
 
-                foodAdapter.onClick();
-                featureAdapter.onClick();
+                foodAdapter.onClose();
+                featureAdapter.onClose();
             }
 
 

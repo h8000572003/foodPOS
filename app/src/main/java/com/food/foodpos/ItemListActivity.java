@@ -3,16 +3,9 @@ package com.food.foodpos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.food.foodpos.dto.BillSon;
 import com.food.foodpos.dto.JsonBill;
-import com.food.foodpos.util.GcmRegistrationAsyncTask;
-import com.food.foodpos.util.RestUtils;
 import com.food.foodpos.util.gcm.GenericuRestTask;
-import com.food.foodpos.util.gcm.RestAsyTaskListener;
-import com.food.foodpos.util.gcm.RestResultException;
 
 
 /**

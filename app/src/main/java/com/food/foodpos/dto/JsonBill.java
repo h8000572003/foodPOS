@@ -8,9 +8,9 @@ import java.util.List;
  */
 public class JsonBill extends RestObj {
 
-    private List<BillSon> content = new ArrayList<>();
+    private List<JsonBillMeals> content = new ArrayList<>();
 
-    public List<BillSon> getContent() {
+    public List<JsonBillMeals> getContent() {
         return content;
     }
 

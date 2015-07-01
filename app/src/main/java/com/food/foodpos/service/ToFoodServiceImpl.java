@@ -7,7 +7,7 @@ import com.food.db.domainType.Bill;
 import com.food.db.domainType.Meal;
 import com.food.db.util.DBFactory;
 import com.food.db.util.DBMain;
-import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBillMeals;
 import com.food.foodpos.dto.ItemListDTO;
 import com.food.foodpos.util.UpdateIsMealOutTask;
 
@@ -59,16 +59,16 @@ public class ToFoodServiceImpl implements ToFoodService {
 
 
     @Override
-    public List<BillSon> queryNowWorkList(ItemListDTO dto, Context context) {
+    public List<JsonBillMeals> queryNowWorkList(ItemListDTO dto, Context context) {
         DBMain dbMain = DBFactory.getLocationDB(context);
         try {
 
-            final List<BillSon> billJsons = new ArrayList<BillSon>();
+            final List<JsonBillMeals> billJsons = new ArrayList<JsonBillMeals>();
             final List<Bill> bills =
                     dbMain.query(Bill.class, "select * from bill", new String[]{});
 
             for (Bill bill : bills) {
-                BillSon json = new BillSon();
+                JsonBillMeals json = new JsonBillMeals();
 
                 List<Meal> meals =
                         dbMain.query(Meal.class, "select * from meal where txId=?", new String[]{bill.getTxId()});
@@ -85,7 +85,7 @@ public class ToFoodServiceImpl implements ToFoodService {
         } finally {
             dbMain.close();
         }
-        return new ArrayList<BillSon>();
+        return new ArrayList<JsonBillMeals>();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ToFoodServiceImpl implements ToFoodService {
     @Override
     public void toClose(ItemListDTO dto, Context context) {
 
-        BillSon json =
+        JsonBillMeals json =
                 dto.getNowSelectBill();
 
 
@@ -173,7 +173,7 @@ public class ToFoodServiceImpl implements ToFoodService {
     }
 
 
-    private void modfiyBillForTotal(DBMain dbMain, ItemListDTO dto, BillSon son,Context context) {
+    private void modfiyBillForTotal(DBMain dbMain, ItemListDTO dto, JsonBillMeals son,Context context) {
 
 
         final Bill bill = son.getBill();

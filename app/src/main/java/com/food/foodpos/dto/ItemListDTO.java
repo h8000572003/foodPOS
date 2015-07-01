@@ -10,38 +10,38 @@ import java.util.List;
  */
 public class ItemListDTO {
 
-    private BillSon nowSelectBill = null;
+    private JsonBillMeals nowSelectBill = null;
 
     private Meal nowMeal = null;
 
 
 
-    private List<BillSon> unAddList = new ArrayList<>();
-    private List<BillSon> addList = new ArrayList<>();
+    private List<JsonBillMeals> unAddList = new ArrayList<>();
+    private List<JsonBillMeals> addList = new ArrayList<>();
 
 
-    public List<BillSon> getUnAddList() {
+    public List<JsonBillMeals> getUnAddList() {
         return unAddList;
     }
 
-    public void setUnAddList(List<BillSon> unAddList) {
+    public void setUnAddList(List<JsonBillMeals> unAddList) {
         this.unAddList = unAddList;
     }
 
-    public List<BillSon> getAddList() {
+    public List<JsonBillMeals> getAddList() {
         return addList;
     }
 
-    public void setAddList(List<BillSon> addList) {
+    public void setAddList(List<JsonBillMeals> addList) {
         this.addList = addList;
     }
 
 
-    public BillSon getNowSelectBill() {
+    public JsonBillMeals getNowSelectBill() {
         return nowSelectBill;
     }
 
-    public void setNowSelectBill(BillSon nowSelectBill) {
+    public void setNowSelectBill(JsonBillMeals nowSelectBill) {
         this.nowSelectBill = nowSelectBill;
     }
 

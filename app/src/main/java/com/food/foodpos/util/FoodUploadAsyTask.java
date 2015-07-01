@@ -3,7 +3,7 @@ package com.food.foodpos.util;
 import android.content.Context;
 
 import com.food.foodpos.dto.BaseRestObj;
-import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBillMeals;
 import com.food.foodpos.util.gcm.GenericuPostRestTask;
 import com.food.foodpos.util.gcm.MyNameValuePair;
 import com.google.gson.Gson;
@@ -19,7 +19,7 @@ import java.util.List;
 public class FoodUploadAsyTask extends GenericuPostRestTask<BaseRestObj> {
 
     private static final String URL = "/bill/insert/newOne";
-    private BillSon son;
+    private JsonBillMeals son;
 
     public FoodUploadAsyTask(Context context) {
         super(URL,context);
@@ -30,7 +30,7 @@ public class FoodUploadAsyTask extends GenericuPostRestTask<BaseRestObj> {
         return BaseRestObj.class;
     }
 
-    public void setSon(BillSon son) {
+    public void setSon(JsonBillMeals son) {
         this.son = son;
 
 

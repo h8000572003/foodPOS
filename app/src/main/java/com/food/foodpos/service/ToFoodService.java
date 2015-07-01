@@ -2,7 +2,7 @@ package com.food.foodpos.service;
 
 import android.content.Context;
 
-import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBillMeals;
 import com.food.foodpos.dto.ItemListDTO;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface ToFoodService {
      * @param context
      * @return
      */
-    List<BillSon> queryNowWorkList(ItemListDTO dto, Context context);
+    List<JsonBillMeals> queryNowWorkList(ItemListDTO dto, Context context);
 
     /**
      * 全部出餐

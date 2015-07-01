@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Andy on 2015/6/16.
  */
-public class BillSon {
+public class JsonBillMeals {
     private com.food.db.domainType.Bill bill = new com.food.db.domainType.Bill();
     private List<Meal> meals = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class BillSon {
 
     @Override
     public String toString() {
-        return "BillSon{" +
+        return "JsonBillMeals{" +
                 "bill=" + bill +
                 ", meals=" + meals +
                 '}';

@@ -25,12 +25,12 @@ import android.widget.Toast;
 
 import com.food.db.domainType.Bill;
 import com.food.db.domainType.Meal;
-import com.food.foodpos.dto.BillSon;
+import com.food.foodpos.dto.JsonBillMeals;
 import com.food.foodpos.dto.ItemListDTO;
 import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.service.ToFoodService;
 import com.food.foodpos.service.ToFoodServiceImpl;
-import com.food.foodpos.util.BillAsyTask;
+import com.food.foodpos.util.BillIsNoSpeakOutTask;
 import com.food.foodpos.util.LoadNoSpeakOutBillTask;
 import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.UpdateIsSpeakOutAsyTask;
@@ -72,7 +72,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private BillAsyTask billRestAsyTask = null;
+    private BillIsNoSpeakOutTask billRestAsyTask = null;
     private ItemListDTO itemListDTO = new ItemListDTO();
 
 
@@ -133,10 +133,10 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
 
     private class UnWorkAdapter extends BaseAdapter {
-        private List<BillSon> unAddList;
+        private List<JsonBillMeals> unAddList;
         private LayoutInflater mChildInflater;
 
-        public UnWorkAdapter(List<BillSon> unAddList) {
+        public UnWorkAdapter(List<JsonBillMeals> unAddList) {
             this.unAddList = unAddList;
             mChildInflater = (LayoutInflater) getActivity()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -174,7 +174,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                 holder.addBillBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final BillSon son =
+                        final JsonBillMeals son =
                                 unAddList.get(position);
 
                         unAddList.remove(son);
@@ -196,7 +196,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             }
 
 
-            BillSon son = unAddList.get(position);
+            JsonBillMeals son = unAddList.get(position);
             StringBuffer stringBuffer = new StringBuffer();
             for (Meal meal : son.getMeals()) {
                 stringBuffer.append("[" + meal.getNumber() + "]");
@@ -221,10 +221,10 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
     private class WorkAdapter extends BaseAdapter {
         private LayoutInflater mChildInflater;
-        private List<BillSon> addList;
+        private List<JsonBillMeals> addList;
 
 
-        public WorkAdapter(List<BillSon> addList) {
+        public WorkAdapter(List<JsonBillMeals> addList) {
             mChildInflater = (LayoutInflater) getActivity()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.addList = addList;
@@ -265,7 +265,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             holder.meals.removeAllViews();
 
 
-            final BillSon son =
+            final JsonBillMeals son =
                     addList.get(position);
 
 
@@ -285,8 +285,9 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
                 addView.setTag(itemHolder);
 
                 this.setSubTitle(meal, itemHolder.titile);//設定顯示標題
-                this.setReduceBtn(son, meal, itemHolder.reduceNumBtn);
-                this.setFoodBtn(son, meal, itemHolder.toFoodBtn);
+                this.setReduceBtn(son, meal, itemHolder.reduceNumBtn);//減少按鈕設定
+                this.setFoodBtn(son, meal, itemHolder.toFoodBtn);//出餐按鈕設定
+
 
                 holder.meals.addView(addView);
 
@@ -296,7 +297,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             return view;
         }
 
-        private void setFoodBtn(final BillSon json, final Meal meal, Button button) {
+        private void setFoodBtn(final JsonBillMeals json, final Meal meal, Button button) {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -311,7 +312,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
         }
 
-        private void setReduceBtn(final BillSon json, final Meal meal, Button button) {
+        private void setReduceBtn(final JsonBillMeals json, final Meal meal, Button button) {
 
             int showValue = Integer.parseInt(meal.getNumber()) - Integer.parseInt(meal.getUseNumber());
             button.setText(showValue + "");
@@ -352,7 +353,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         }
 
 
-        private String getTitle(BillSon son) {
+        private String getTitle(JsonBillMeals son) {
 
             //"[外/內][001][井邊]夫妻 [$500]"
             StringBuffer buffer = new StringBuffer();
@@ -369,12 +370,12 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             return buffer.toString();
         }
 
-        private void setTitleShow(final BillSon json, TextView textView) {
+        private void setTitleShow(final JsonBillMeals json, TextView textView) {
             textView.setText(this.getTitle(json));
 
         }
 
-        private void setCloseBtnShow(final BillSon json, Button button) {
+        private void setCloseBtnShow(final JsonBillMeals json, Button button) {
 
             final Bill bill =
                     json.getBill();
@@ -410,7 +411,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
             }
         }
 
-        private void setBuyBtnShow(final BillSon son, Button button) {
+        private void setBuyBtnShow(final JsonBillMeals son, Button button) {
             if (son.getBill().getIsPaid().equals("Y")) {
                 button.setTextColor(Color.GRAY);
             } else {
@@ -588,29 +589,32 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         return rootView;
     }
 
+    /**
+     * 計算總額度
+     */
     private void setShowMeaage() {
-
-
         final List<FoddNo> foddNos = new ArrayList<>();
         StringBuffer buffer = new StringBuffer();
-        for (BillSon son : itemListDTO.getAddList()) {
+        for (JsonBillMeals son : itemListDTO.getAddList()) {
             for (Meal meal : son.getMeals()) {
 
-                if (!StringUtils.equals(meal.getUseNumber(), meal.getNumber())) {
+                if (!StringUtils.equals(meal.getUseNumber(), meal.getNumber())) {//已出數量跟需出總數不相同
 
                     String food = meal.getName();
                     if (StringUtils.isNotBlank(meal.getSpcialize())) {
                         food += "[" + meal.getSpcialize() + "]";
                     }
+
+                    final int noToFoodNum = Integer.parseInt(meal.getNumber()) - Integer.parseInt(meal.getUseNumber());
                     final FoddNo foodNo = new FoddNo();
                     foodNo.setFood(food);
 
-                    int noToFoodNum = Integer.parseInt(meal.getNumber()) - Integer.parseInt(meal.getUseNumber());
+
                     if (foddNos.contains(foodNo)) {
                         int indexFoodNo =
                                 foddNos.indexOf(foddNos);
                         final FoddNo nowFood = foddNos.get(indexFoodNo);
-                        nowFood.setNo(nowFood.getNo() + noToFoodNum);
+                        nowFood.setNo(nowFood.getNo() + noToFoodNum);//
                     } else {
                         foodNo.setNo(noToFoodNum);
                         foodNo.setFood(food);
@@ -620,7 +624,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
 
                 }
             }
-            Collections.sort(foddNos);
+            Collections.sort(foddNos);//排序，讓類似名稱的排列在一起
         }
 
         StringBuffer showMessageBur = new StringBuffer();
