@@ -9,12 +9,13 @@ import com.food.foodpos.util.gcm.GenericuRestTask;
  * 取得今天尚未叫食物
  * Created by Andy on 2015/6/16.
  */
-public class BillIsNoSpeakOutTask extends GenericuRestTask<JsonBill> {
+public class BillIsNoSpeakOutAsyTask extends GenericuRestTask<JsonBill> {
 
+    private String URL = "/bill/query/unBuy/today/noSpeakOut";
 
-    public BillIsNoSpeakOutTask(Context context) {
+    public BillIsNoSpeakOutAsyTask(Context context) {
         super(context);
-        setUrl("/bill/query/unBuy/today/noSpeakOut");
+        setUrl(URL);
     }
 
     @Override

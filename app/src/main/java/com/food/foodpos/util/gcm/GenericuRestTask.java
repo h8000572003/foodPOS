@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.food.foodpos.dto.RestObj;
+import com.food.foodpos.util.RSCDMSG;
 import com.food.foodpos.util.RestUtils;
 import com.google.gson.Gson;
 
@@ -44,7 +45,22 @@ public abstract class GenericuRestTask<T extends RestObj> extends AsyncTask<Void
 
     @Override
     protected String doInBackground(Void... params) {
-        return RestUtils.getStringFromUrl(url,context);
+
+        try {
+            return RestUtils.getStringFromGetUrl(url, context);
+        } catch (RestResultException e) {
+            this.whenException(e);
+            throw e;
+        } catch (Exception e) {
+
+            throw new RestResultException(e);
+
+        }
+
+    }
+
+    public void whenException(RestResultException e) {
+        Log.i(TAG, "doNothing..");
     }
 
 
@@ -52,19 +68,23 @@ public abstract class GenericuRestTask<T extends RestObj> extends AsyncTask<Void
     protected final void onPostExecute(String o) {
         Log.d(TAG, "json=" + o);
 
+
         final T restObject =
                 (T) new Gson().fromJson(o, this.trClass());
+
+
         if (this.restAsyTaskListener != null) {
 
             if (!restObject.getCode().equals(GOOD_CODE)) {
-                RestResultException excetion = new RestResultException();
-                excetion.setCode(restObject.getCode());
-                excetion.setMessage(restObject.getMessage());
+                RSCDMSG resdcode = RSCDMSG.lookUp(restObject.getCode());
+                RestResultException excetion = new RestResultException(resdcode, restObject.getMessage());
+
                 this.restAsyTaskListener.message(excetion, restObject);
             } else {
                 this.restAsyTaskListener.message(null, restObject);
             }
         }
+
 
     }
 

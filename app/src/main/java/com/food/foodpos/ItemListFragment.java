@@ -30,7 +30,7 @@ import com.food.foodpos.dto.ItemListDTO;
 import com.food.foodpos.dto.JsonBill;
 import com.food.foodpos.service.ToFoodService;
 import com.food.foodpos.service.ToFoodServiceImpl;
-import com.food.foodpos.util.BillIsNoSpeakOutTask;
+import com.food.foodpos.util.BillIsNoSpeakOutAsyTask;
 import com.food.foodpos.util.LoadNoSpeakOutBillTask;
 import com.food.foodpos.util.Update2PayAsyTask;
 import com.food.foodpos.util.UpdateIsSpeakOutAsyTask;
@@ -72,7 +72,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
 
-    private BillIsNoSpeakOutTask billRestAsyTask = null;
+    private BillIsNoSpeakOutAsyTask billIsNoSpeakOutAsyTask = null;
     private ItemListDTO itemListDTO = new ItemListDTO();
 
 
@@ -127,7 +127,7 @@ public class ItemListFragment extends Fragment implements GenericuRestTask.RestA
         }
 
 
-        this.billRestAsyTask = null;
+        this.billIsNoSpeakOutAsyTask = null;
         this.unWorkAdapter.notifyDataSetChanged();
     }
 

@@ -18,7 +18,7 @@ public abstract class GenericuPostRestTask<T extends RestObj> extends GenericuRe
     @Override
     protected String doInBackground(Void... params) {
 
-        return RestUtils.getStringFromUrl(url, pairs,context);
+        return RestUtils.getStringFromGetUrl(url, pairs, context);
     }
 
 

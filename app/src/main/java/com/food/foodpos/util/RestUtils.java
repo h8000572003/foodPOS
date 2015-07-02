@@ -6,8 +6,10 @@ import android.util.Log;
 import com.food.db.domainType.Bill;
 import com.food.foodpos.util.gcm.Contract;
 import com.food.foodpos.util.gcm.MyNameValuePair;
+import com.food.foodpos.util.gcm.RestResultException;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,30 +33,40 @@ import java.util.List;
 public class RestUtils {
     private static final String TAG = "RestUtils";
 
-    private static final String UN_BUY_BILL = "/bill/query/unBuy";
 
-    public static String getStringFromUrl(String sonUrl, Context context) {
+    public static String getStringFromGetUrl(String sonUrl, Context context) {
+        return getStringFromGetUrl(sonUrl, null, context);
+    }
 
-
+    public static String getStringFromGetUrl(String sonUrl, List<MyNameValuePair> myNameValuePairList, Context context) {
         final HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
 
         DefaultHttpClient demo = new DefaultHttpClient(httpParams);
         demo.getParams().setParameter("http.protocol.content-charset", "UTF-8");
 
-        final String url = String.format(Contract.REST_PATH, Util.getIp(context)) + sonUrl;
-
-        HttpGet httpGet = new HttpGet(url);
-        Log.d(TAG, "url=" + url);
+        final StringBuffer urlBuffer = new StringBuffer();
+        urlBuffer.append(String.format(Contract.REST_PATH, Util.getIp(context)) + sonUrl);
+        if (myNameValuePairList != null && myNameValuePairList.size() > 0) {
+            List<String> parmters = new ArrayList<>();
+            for (MyNameValuePair valuePair : myNameValuePairList) {
+                parmters.add(valuePair.getName() + "=" + valuePair.getValue());
+            }
+            urlBuffer.append("?" + StringUtils.join(parmters, "&"));
+        }
+        HttpGet httpGet = new HttpGet(urlBuffer.toString());
+        Log.d(TAG, "url=" + urlBuffer.toString());
         try {
 
             HttpResponse response = demo.execute(httpGet);
             return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
-            e.printStackTrace();
-            return "";
+            Log.e(TAG, "e:" + e);
+
+            throw new RestResultException(e);
         }
     }
+
 
     public static String getStringFromUrl(String sonUrl, List<MyNameValuePair> myNameValuePairList, Context context) {
 
@@ -79,32 +91,11 @@ public class RestUtils {
             return EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            throw new RestResultException(e);
         }
 
 
     }
 
 
-
-    private class Bills {
-        private List<Bill> bills;
-
-        public List<Bill> getBills() {
-            return bills;
-        }
-
-        public void setBills(List<Bill> bills) {
-            this.bills = bills;
-        }
-    }
-
-    public static <T> T getObjetByJson(Class<T> mClass, String json) {
-        return new Gson().fromJson(json, mClass);
-
-    }
-
-    public static String toJson(Object object) {
-        return new Gson().toJson(object);
-    }
 }

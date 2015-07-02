@@ -43,11 +43,9 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
             gcm.unregister();
 
             regId = gcm.register(SENDER_ID);
-
-
             Util.putGCMID(regId, context);
 
-            return RestUtils.getStringFromUrl("/gcm/insert?id=" + regId, context);
+            return RestUtils.getStringFromGetUrl("/gcm/insert?id=" + regId, context);
         } catch (Exception e) {
             Log.e("E:", e.getMessage());
             return "";
